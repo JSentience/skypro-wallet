@@ -1,11 +1,11 @@
-import { Login } from './components/login/Login';
+import { AppRoutes } from './components/AppRoutes/AppRoutes';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
 	return (
-		<>
-			<div>Привет из react skypro</div>
-			<Login />
-		</>
+		<AuthProvider>
+			<AppRoutes />
+		</AuthProvider>
 	);
 }
 
