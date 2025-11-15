@@ -5,7 +5,7 @@ import { NewExpense } from '../NewExpense/NewExpense';
 export const ExpensesLayout = () => {
 	return (
 		<>
-			<h2>Мои расходы</h2>
+			<h3>Мои расходы</h3>
 			<ExpenseTable />
 			<NewExpense />
 		</>
