@@ -12,7 +12,10 @@ export const Header = () => {
 		navigate('/analysis');
 	};
 	const handleClickMain = () => {
-		navigate('/');
+		navigate('/expenses');
+	};
+	const handleClickLogout = () => {
+		navigate('/signin');
 	};
 	return (
 		<HeaderStyled>
@@ -22,7 +25,7 @@ export const Header = () => {
 					handleClickExpenses={handleClickExpenses}
 					handleClickAnalytics={handleClickAnalytics}
 				/>
-				<ExitLinkA>Выйти</ExitLinkA>
+				<ExitLinkA onClick={handleClickLogout}>Выйти</ExitLinkA>
 			</HeaderWrapper>
 		</HeaderStyled>
 	);

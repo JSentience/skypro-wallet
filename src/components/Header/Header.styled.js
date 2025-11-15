@@ -28,4 +28,7 @@ export const ExitLinkA = styled.a`
 	font-weight: 600;
 	line-height: 170%; /* 23.8px */
 	cursor: pointer;
+	&:hover {
+		color: #1fa46c;
+	}
 `;

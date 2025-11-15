@@ -51,8 +51,8 @@ export const InputEmail = styled.input`
 	border: 0.5px solid #999;
 	&:focus {
 		border-radius: 6px;
-		border: 0.5px solid #7334ea;
-		background: #f1ebfd;
+		border: 0.5px solid #1fa46c;
+		background: #dbffe9;
 	}
 `;
 export const InputPassword = styled.input`
@@ -65,8 +65,8 @@ export const InputPassword = styled.input`
 	border: 0.5px solid #999;
 	&:focus {
 		border-radius: 6px;
-		border: 0.5px solid #7334ea;
-		background: #f1ebfd;
+		border: 0.5px solid #1fa46c;
+		background: #dbffe9;
 	}
 `;
 
@@ -81,8 +81,8 @@ export const InputName = styled.input`
 
 	&:focus {
 		border-radius: 6px;
-		border: 0.5px solid #7334ea;
-		background: #f1ebfd;
+		border: 0.5px solid #1fa46c;
+		background: #dbffe9;
 	}
 `;
 export const ChangeForm = styled.div`

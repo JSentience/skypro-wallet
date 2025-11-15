@@ -25,7 +25,7 @@ export const Login = () => {
 
 	const handleLogin = () => {
 		setAuth(true);
-		navigate('/');
+		navigate('/expenses');
 	};
 
 	const handleSwitchForm = () => {

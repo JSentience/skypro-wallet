@@ -1,3 +1,5 @@
+import { MyExpensesPage } from './MyExpensesPage';
+
 export const MainPage = () => {
-	return <div>Главная страница</div>;
+	return <MyExpensesPage />;
 };
