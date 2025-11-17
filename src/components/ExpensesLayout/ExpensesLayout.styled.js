@@ -14,7 +14,6 @@ export const PageTitle = styled.h1`
 	font-weight: 700;
 	line-height: 150%;
 	text-align: left;
-	margin-left: 120px;
 	margin-top: 36px;
 `;
 
@@ -22,5 +21,4 @@ export const MainContent = styled.main`
 	display: flex;
 	align-items: center;
 	gap: 34px;
-	margin-left: 120px;
 `;
