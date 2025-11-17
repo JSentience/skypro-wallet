@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const LinkContainer = styled.div`
@@ -6,25 +7,7 @@ export const LinkContainer = styled.div`
 	gap: 48px;
 `;
 
-export const NavLinkExpense = styled.a`
-	//color: #000;
-	text-align: center;
-	font-family: 'Montserrat', sans-serif;
-	font-size: 14px;
-	font-style: normal;
-	//font-weight: 400;
-	line-height: 170%; /* 23.8px */
-	cursor: pointer;
-	color: #1fa46c;
-	text-decoration: underline;
-	text-weight: 600;
-	&:checked {
-		color: #1fa46c;
-		text-decoration: underline;
-	}
-`;
-
-export const NavLinkAnalytics = styled.a`
+export const NavLinks = styled(NavLink)`
 	color: #000;
 	text-align: center;
 	font-family: 'Montserrat', sans-serif;
@@ -33,4 +16,9 @@ export const NavLinkAnalytics = styled.a`
 	font-weight: 400;
 	line-height: 170%; /* 23.8px */
 	cursor: pointer;
+	&.active {
+		color: #1fa46c;
+		text-decoration: underline;
+		font-weight: 600;
+	}
 `;

@@ -1,21 +1,19 @@
 import {
 	LinkContainer,
-	NavLinkAnalytics,
-	NavLinkExpense,
+	NavLinks
 } from './HeaderLink.styled';
 
-export const HeaderLink = (props) => {
-	const { handleClickExpenses, handleClickAnalytics } = props;
+export const HeaderLink = () => {
 
 	return (
 		<>
 			<LinkContainer>
-				<NavLinkExpense onClick={handleClickExpenses}>
+				<NavLinks to='/expenses'>
 					Мои расходы
-				</NavLinkExpense>
-				<NavLinkAnalytics onClick={handleClickAnalytics}>
+				</NavLinks>
+				<NavLinks to="/analysis">
 					Анализ расходов
-				</NavLinkAnalytics>
+				</NavLinks>
 			</LinkContainer>
 		</>
 	);

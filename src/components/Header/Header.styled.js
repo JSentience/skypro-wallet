@@ -8,6 +8,8 @@ export const HeaderStyled = styled.header`
 	left: 0;
 	z-index: 1000;
 	background: #fff;
+	padding-left: calc(50% - 41%);
+    padding-right: calc(50% - 41%);
 `;
 export const HeaderWrapper = styled.div`
 	display: flex;
