@@ -22,5 +22,4 @@ export const MainContent = styled.main`
 	display: flex;
 	align-items: center;
 	gap: 34px;
-	margin-left: 120px;
 `;

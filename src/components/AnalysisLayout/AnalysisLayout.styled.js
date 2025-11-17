@@ -11,7 +11,8 @@ export const AnalyticsTitle = styled.h2`
 	margin-bottom: 32px;
 `;
 export const AnalyticsWrapper = styled.div`
-	width: 114vh;
+	max-width: 1200px;
+	margin: 0 auto;
 	height: 100vh;
 `;
 
@@ -20,4 +21,3 @@ export const AnalyticsContent = styled.div`
 	grid-template-columns: repeat(12, 1fr);
 	gap: 32px;
 `;
-
