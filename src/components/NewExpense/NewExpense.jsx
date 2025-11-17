@@ -1,15 +1,18 @@
 import * as S from './NewExpense.styled';
 
-export const NewExpense = () => {
+export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	return (
 		<div>
 			<S.Container>
 				<S.Content>
-					<S.Title>Новый расход</S.Title>
+					<S.Title>{isEditing ? 'Редактирование' : 'Новый расход'}</S.Title>
 
 					<S.InputGroup>
 						<S.InputLabel>Описание</S.InputLabel>
-						<S.Input type="text" />
+						<S.Input
+							type="text"
+							defaultValue={isEditing ? editingExpense?.description : ''}
+						/>
 					</S.InputGroup>
 
 					<S.CategorySection>
@@ -44,16 +47,24 @@ export const NewExpense = () => {
 
 					<S.InputGroup>
 						<S.InputLabel>Дата</S.InputLabel>
-						<S.Input type="text" />
+						<S.Input
+							type="text"
+							defaultValue={isEditing ? editingExpense?.date : ''}
+						/>
 					</S.InputGroup>
 
 					<S.InputGroup>
 						<S.InputLabel>Сумма</S.InputLabel>
-						<S.Input type="text" />
+						<S.Input
+							type="text"
+							defaultValue={isEditing ? editingExpense?.amount : ''}
+						/>
 					</S.InputGroup>
 
-					<S.Button>
-						<S.ButtonText>Добавить новый расход</S.ButtonText>
+					<S.Button onClick={onSave}>
+						<S.ButtonText>
+							{isEditing ? 'Сохранить редактирование' : 'Добавить новый расход'}
+						</S.ButtonText>
 					</S.Button>
 				</S.Content>
 			</S.Container>

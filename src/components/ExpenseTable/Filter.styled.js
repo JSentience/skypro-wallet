@@ -28,6 +28,7 @@ export const FilterItem = styled.div`
 	border-radius: 30px;
 	background-color: ${(props) => (props.$active ? '#dbffe9' : '#f3f4f6')};
 	padding: 8px 20px;
+	cursor: pointer;
 `;
 
 export const FilterText = styled.p`

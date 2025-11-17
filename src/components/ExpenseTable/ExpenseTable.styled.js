@@ -25,7 +25,6 @@ export const Title = styled.h2`
 	font-size: 24px;
 	font-weight: 700;
 	line-height: 29px;
-	text-align: center;
 	margin-top: 32px;
 	margin-bottom: 32px;
 `;
@@ -86,7 +85,7 @@ export const TableHeader = styled.div`
 	align-items: center;
 	margin-left: 32px;
 	padding-right: 69px;
-	color: #999;
+	color: #999999;
 `;
 
 export const HeaderItem = styled.div`
@@ -99,19 +98,40 @@ export const HeaderItem = styled.div`
 export const Divider = styled.div`
 	width: 789px;
 	height: 0;
-	border-top: 0.5px solid #a0a0a0;
+	border-top: 0.5px solid #999999;
 	margin-top: 5.75px;
 `;
 
 export const TableContent = styled.div`
-	width: 723px;
+	width: 789px;
 	height: 479px;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;
 	gap: 14px;
-	padding-top: 18.25px;
+	padding: 18.25px 6px 0 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: #f1f1f1;
+		border-radius: 3px;
+		margin: 5px 0;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: #c1c1c1;
+		border-radius: 3px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: #a8a8a8;
+	}
 `;
 
 export const TableRow = styled.div`
@@ -124,6 +144,7 @@ export const TableRow = styled.div`
 	justify-content: flex-start;
 	align-items: center;
 	margin-left: 32px;
+	cursor: pointer;
 `;
 
 export const RowItem = styled.div`
@@ -144,4 +165,5 @@ export const ActionIcon = styled.img`
 	width: 12px;
 	height: 12px;
 	margin-right: ${(props) => props.marginright || '0px'};
+	cursor: pointer;
 `;
