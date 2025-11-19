@@ -14,7 +14,6 @@ export const PageTitle = styled.h1`
 	font-weight: 700;
 	line-height: 150%;
 	text-align: left;
-	margin-left: 120px;
 	margin-top: 36px;
 `;
 
