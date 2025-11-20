@@ -5,12 +5,18 @@ import { Hero } from '../components/Hero/Hero';
 import { Wrapper } from '../Wrapper.styled';
 
 export const PrivatePage = () => {
-	const { auth } = useAuth();
+	const { isAuthenticated, loading } = useAuth();
 
-	return auth ? (
+	if (loading) {
+		return <div>Loading...</div>; // or null
+	}
+
+	return isAuthenticated ? (
 		<Wrapper>
 			<Header />
-			<Hero />
+			<Hero>
+				<Outlet />
+			</Hero>
 		</Wrapper>
 	) : (
 		<Navigate to="/signin" replace />
