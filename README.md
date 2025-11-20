@@ -1,16 +1,122 @@
-# React + Vite
+# SkyPro Wallet
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Приложение для управления личными расходами с возможностью анализа и визуализации данных.
 
-Currently, two official plugins are available:
+## Описание проекта
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+SkyPro Wallet - это веб-приложение на React для отслеживания и анализа личных расходов. Приложение включает аутентификацию пользователей, управление расходами и инструменты для анализа финансовых данных.
 
-## React Compiler
+## Технологии
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19, Vite
+- **Стилизация**: Styled Components
+- **Маршрутизация**: React Router DOM v7
+- **HTTP-клиент**: Axios
+- **Качество кода**: ESLint, Prettier
 
-## Expanding the ESLint configuration
+## Выполненные задачи
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### ✅ Настройка проекта
+- Инициализация проекта с Vite
+- Настройка React 19
+- Установка и конфигурация Styled Components
+- Настройка React Router для навигации
+- Добавление ESLint и Prettier для качества кода
+
+### ✅ Аутентификация пользователей
+- Создание контекста аутентификации (AuthContext)
+- Реализация хука useAuth для доступа к состоянию аутентификации
+- Защита маршрутов с помощью PrivatePage компонента
+- Создание страниц входа и регистрации
+- Реализация переключения между формами входа/регистрации в одном компоненте
+
+### ✅ Структура приложения
+- Настройка маршрутизации с защищенными и публичными маршрутами
+- Создание основного layout с Header и Hero компонентами
+- Реализация навигации в Header (логотип, ссылки на разделы, выход)
+
+### ✅ Страницы приложения
+- **Главная страница** (/): отображает страницу расходов
+- **Мои расходы** (/expenses): таблица расходов и форма добавления новых
+- **Анализ расходов** (/analysis): календарь и гистограмма для анализа
+- **Вход** (/signin): форма аутентификации
+- **Регистрация** (/signup): форма регистрации
+
+### ✅ Компоненты интерфейса
+- Header: навигационная панель с логотипом и ссылками
+- Hero: основной контейнер для контента страниц
+- Login: универсальный компонент для входа и регистрации
+- ExpensesLayout: layout для страницы расходов
+- AnalysisLayout: layout для страницы анализа
+- ExpenseTable: компонент для отображения таблицы расходов (заглушка)
+- NewExpense: компонент для добавления новых расходов (заглушка)
+- Calendar: компонент календаря для анализа (заглушка)
+- Histogram: компонент гистограммы для визуализации (заглушка)
+
+### ✅ Стилизация
+- Глобальные стили приложения
+- Стилизованные компоненты для всех элементов интерфейса
+- Адаптивный дизайн с использованием Container и Wrapper
+
+## Запуск проекта
+
+1. Установите зависимости:
+   ```bash
+   npm install
+   ```
+
+2. Запустите приложение в режиме разработки:
+   ```bash
+   npm run dev
+   ```
+
+3. Откройте браузер и перейдите по адресу `http://localhost:5173`
+
+## Скрипты
+
+- `npm run dev` - запуск сервера разработки
+- `npm run build` - сборка проекта для продакшена
+- `npm run lint` - проверка кода ESLint
+- `npm run preview` - предварительный просмотр собранного приложения
+
+## Структура проекта
+
+```
+src/
+├── components/          # Переиспользуемые компоненты
+│   ├── AnalysisLayout/  # Layout для анализа расходов
+│   ├── Button/          # Кнопка
+│   ├── Calendar/        # Компонент календаря
+│   ├── ExpensesLayout/  # Layout для расходов
+│   ├── Header/          # Шапка приложения
+│   ├── Hero/            # Основной контейнер
+│   ├── Histogram/       # Компонент гистограммы
+│   ├── login/           # Компонент аутентификации
+│   ├── NewExpense/      # Форма добавления расхода
+│   └── ExpenseTable/    # Таблица расходов
+├── context/             # React Context
+│   └── AuthContext.jsx  # Контекст аутентификации
+├── hooks/               # Пользовательские хуки
+│   └── useAuth.js       # Хук для аутентификации
+├── pages/               # Страницы приложения
+│   ├── CostAnalysisPage.jsx
+│   ├── MainPage.jsx
+│   ├── MyExpensesPage.jsx
+│   ├── PrivatePage.jsx
+│   ├── SignInPage.jsx
+│   └── SignUpPage.jsx
+├── App.jsx              # Главный компонент
+├── AppRoutes.jsx        # Настройка маршрутов
+├── main.jsx             # Точка входа
+└── *.styled.js          # Стилизованные компоненты
+```
+
+## Будущие улучшения
+
+- Реализация функциональности ExpenseTable для отображения списка расходов
+- Добавление формы NewExpense для создания новых записей
+- Разработка компонента Calendar с выбором дат
+- Создание Histogram для визуализации данных
+- Интеграция с backend API для хранения данных
+- Добавление валидации форм
+- Улучшение UX/UI дизайна
