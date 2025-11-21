@@ -1,10 +1,10 @@
-import { LogoHeader, LogoLink } from './HeaderLogo.styled';
+import * as S from './HeaderLogo.styled';
 
 export const HeaderLogo = (props) => {
 	const { handleClickMain } = props;
 	return (
-		<LogoHeader>
-			<LogoLink onClick={handleClickMain}>
+		<S.LogoHeader>
+			<S.LogoLink onClick={handleClickMain}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="144"
@@ -63,7 +63,7 @@ export const HeaderLogo = (props) => {
 						fill="black"
 					/>
 				</svg>
-			</LogoLink>
-		</LogoHeader>
+			</S.LogoLink>
+		</S.LogoHeader>
 	);
 };

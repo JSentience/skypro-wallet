@@ -1,6 +1,6 @@
 import { HeaderLink } from '../HeaderLink/HeaderLink';
 import { HeaderLogo } from '../HeaderLogo/HeaderLogo';
-import { ExitLinkA, HeaderStyled, HeaderWrapper } from './Header.styled';
+import * as S from './Header.styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -22,13 +22,13 @@ export const Header = () => {
 	};
 
 	return (
-		<HeaderStyled>
-			<HeaderWrapper>
+		<S.HeaderStyled>
+			<S.HeaderWrapper>
 				<HeaderLogo handleClickMain={handleClickMain} />
 				{showLinks && <HeaderLink />}
 				{isAuthenticated && user && <div>Привет, {user.name}!</div>}
-				<ExitLinkA onClick={handleClickLogout}>Выйти</ExitLinkA>
-			</HeaderWrapper>
-		</HeaderStyled>
+				<S.ExitLinkA onClick={handleClickLogout}>Выйти</S.ExitLinkA>
+			</S.HeaderWrapper>
+		</S.HeaderStyled>
 	);
 };

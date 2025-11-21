@@ -2,21 +2,9 @@ import { useAuth } from '../../hooks/useAuth';
 import { login, register } from '../../api/authApi';
 import { Container } from '../../Container.styled.js';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MainButton } from '../Button/Button';
 import { useEffect, useState } from 'react';
-import {
-	ChangeForm,
-	ChangeFormLink,
-	ChangeFormText,
-	InputEmail,
-	InputForm,
-	InputName,
-	InputPassword,
-	LoginContainer,
-	LoginTitle,
-	LoginWrapper,
-	Wrapper,
-} from './Login.styled';
+import * as S from './Login.styled';
+import { MainButton } from '../Button/Button';
 
 export const Login = () => {
 	const { login: authLogin } = useAuth();
@@ -77,54 +65,50 @@ export const Login = () => {
 
 	return (
 		<>
-			<Wrapper>
+			<S.Wrapper>
 				<Container>
-					<LoginContainer>
-						<LoginWrapper>
-							<LoginTitle>{isSignIn ? 'Вход' : 'Регистрация'}</LoginTitle>
-							{error && <div style={{ color: 'red' }}>{error}</div>}
-							{success && <div style={{ color: 'green' }}>{success}</div>}
-							<InputForm>
+					<S.LoginContainer>
+						<S.LoginWrapper>
+							<S.LoginTitle>{isSignIn ? 'Вход' : 'Регистрация'}</S.LoginTitle>
+							{error && <S.ErrorStyle>{error}</S.ErrorStyle>}
+							{success && <S.SuccessStyle>{success}</S.SuccessStyle>}
+							<S.InputForm>
 								{!isSignIn && (
-									<InputName
+									<S.InputName
 										type="text"
 										placeholder="Имя"
 										value={name}
 										onChange={(e) => setName(e.target.value)}
 									/>
 								)}
-								<InputEmail
+								<S.InputEmail
 									type="text"
 									placeholder="Почта"
 									value={loginValue}
 									onChange={(e) => setLoginValue(e.target.value)}
 								/>
-								<InputPassword
+								<S.InputPassword
 									type="password"
 									placeholder="Пароль"
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 								/>
-							</InputForm>
-							<MainButton
-								type="submit"
-								onSubmit={handleSubmit}
-								onClick={handleSubmit}
-							>
+							</S.InputForm>
+							<MainButton type="submit" onClick={handleSubmit}>
 								{isSignIn ? 'Войти' : 'Зарегистрироваться'}
 							</MainButton>
-							<ChangeForm>
-								<ChangeFormText>
+							<S.ChangeForm>
+								<S.ChangeFormText>
 									{isSignIn ? 'Нужно зарегистрироваться?' : 'Уже есть аккаунт?'}
-								</ChangeFormText>
-								<ChangeFormLink onClick={handleSwitchForm}>
+								</S.ChangeFormText>
+								<S.ChangeFormLink onClick={handleSwitchForm}>
 									{isSignIn ? 'Регистрируйтесь здесь' : 'Войдите здесь'}
-								</ChangeFormLink>
-							</ChangeForm>
-						</LoginWrapper>
-					</LoginContainer>
+								</S.ChangeFormLink>
+							</S.ChangeForm>
+						</S.LoginWrapper>
+					</S.LoginContainer>
 				</Container>
-			</Wrapper>
+			</S.Wrapper>
 		</>
 	);
 };

@@ -28,13 +28,13 @@ export const login = async (login, password) => {
 	}
 };
 
-export const register = async (login, password, name) => {
+export const register = async (name, login, password) => {
 	try {
 		const response = await axios.post(
 			AUTH_URL,
 			{
-				login,
 				name,
+				login,
 				password,
 			},
 			{
