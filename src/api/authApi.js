@@ -54,20 +54,20 @@ export const register = async (name, login, password) => {
 	}
 };
 
-export const authRequest = async (config) => {
-	const token = getToken();
-	if (!token) throw new Error('Требуется авторизация');
-
-	try {
-		const response = await axios({
-			...config,
-			headers: {
-				Authorization: `Bearer ${token}`,
-				...config.headers,
-			},
-		});
-		return response.data;
-	} catch (error) {
-		throw new Error(error.response?.data?.message || 'Ошибка запроса');
-	}
-};
+// export const authRequest = async (config) => {
+// 	const token = getToken();
+// 	if (!token) throw new Error('Требуется авторизация');
+//
+// 	try {
+// 		const response = await axios({
+// 			...config,
+// 			headers: {
+// 				Authorization: `Bearer ${token}`,
+// 				...config.headers,
+// 			},
+// 		});
+// 		return response.data;
+// 	} catch (error) {
+// 		throw new Error(error.response?.data?.message || 'Ошибка запроса');
+// 	}
+// };
