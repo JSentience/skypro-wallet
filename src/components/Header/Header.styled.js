@@ -10,6 +10,10 @@ export const HeaderStyled = styled.header`
 	background: #fff;
 	padding-left: calc(50% - 41%);
     padding-right: calc(50% - 41%);
+	@media (max-width: 1024px) {
+		padding-left: calc(50% - 45%);
+		padding-right: calc(50% - 45%);
+	}
 `;
 export const HeaderWrapper = styled.div`
 	display: flex;

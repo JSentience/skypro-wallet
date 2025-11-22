@@ -1,20 +1,15 @@
 import { Calendar } from '../Calendar/Calendar';
 import { Histogram } from '../Histogram/Histogram';
-
-import {
-	AnalyticsTitle,
-	AnalyticsWrapper,
-	AnalyticsContent,
-} from './AnalysisLayout.styled';
+import * as S from './AnalysisLayout.styled';
 
 export const AnalysisLayout = () => {
 	return (
-		<AnalyticsWrapper>
-			<AnalyticsTitle>Анализ расходов</AnalyticsTitle>
-			<AnalyticsContent>
+		<S.AnalyticsWrapper>
+			<S.AnalyticsTitle>Анализ расходов</S.AnalyticsTitle>
+			<S.AnalyticsContent>
 				<Calendar />
 				<Histogram />
-			</AnalyticsContent>
-		</AnalyticsWrapper>
+			</S.AnalyticsContent>
+		</S.AnalyticsWrapper>
 	);
 };

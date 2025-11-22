@@ -24,6 +24,10 @@ export const HistogramSumm = styled.p`
 	line-height: 29px;
 	letter-spacing: 0px;
 	text-align: left;
+
+	@media (max-width: 1024px) {
+		font-size: 20px;
+	}
 `;
 
 export const HistogramText = styled.div`
@@ -38,6 +42,9 @@ export const ExpensesText = styled.span`
 	line-height: 15px;
 	letter-spacing: 0px;
 	text-align: center;
+	@media (max-width: 1024px) {
+		font-size: 10px;
+	}
 `;
 
 export const ExpensesBold = styled(ExpensesText)`
@@ -49,6 +56,9 @@ export const HistogramMainContent = styled.div`
 	gap: 32px;
 	justify-content: space-between;
 	align-items: flex-end;
+	@media (max-width: 1024px) {
+		gap: 20px;
+	}
 `;
 
 export const ColumnAndExpenses = styled.div`
@@ -64,6 +74,9 @@ export const ColumnSumm = styled.p`
 	line-height: 20px;
 	letter-spacing: 0px;
 	text-align: center;
+	@media (max-width: 1024px) {
+		font-size: 12px;
+	}
 `;
 
 // с апи нужно будет оставить, возможно,
@@ -72,7 +85,8 @@ export const ColumnSumm = styled.p`
 // (возможно пропсом, состоянием)
 // высота уже с апи как-то будет связана
 export const ColumnGraphicksFood = styled.div`
-	width: 94px;
+	/* width: 94px; */
+	width: clamp(20px, 5vw, 94px);
 	height: 328px;
 	border-radius: 12px;
 	background: rgba(217, 182, 255, 1);

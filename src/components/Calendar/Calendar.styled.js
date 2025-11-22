@@ -12,6 +12,9 @@ export const CalendarBlock = styled.div`
 	box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background: rgba(255, 255, 255, 1);
 	position: relative;
+	@media (max-width: 1024px) {
+		width: min-content;
+	}
 `;
 
 export const MonthLine = styled.div`
@@ -39,6 +42,9 @@ export const CalendarPeriod = styled.p`
 	line-height: 29px;
 	letter-spacing: 0px;
 	text-align: center;
+	@media (max-width: 1024px) {
+		font-size: 20px;
+	}
 `;
 
 export const CalendarYearMonth = styled.div`
@@ -93,12 +99,15 @@ export const MonthTitle = styled.h3`
 	line-height: 20px;
 	letter-spacing: 0px;
 	text-align: left;
+	@media (max-width: 1024px) {
+		font-size: 15px;
+	}
 `;
 
 export const Days = styled.div`
 	display: flex;
 	flex-wrap: wrap;
-	gap: 6px;
+	gap: 4px;
 `;
 
 export const Day = styled.div`
@@ -112,6 +121,11 @@ export const Day = styled.div`
 	align-items: center;
 	gap: 10;
 	padding: 10px 16px;
+	@media (max-width: 1024px) {
+		width: 35px;
+		height: 35px;
+		font-size: 15px;
+	}
 `;
 
 // потом сделать через псевдокласс,
