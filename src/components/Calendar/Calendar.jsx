@@ -1,5 +1,5 @@
 import * as S from './Calendar.styled';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const DAYS_OF_WEEK = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
 const MONTHS = [
@@ -17,12 +17,54 @@ const MONTHS = [
 	'Декабрь',
 ];
 
-const generateNumbers = (count, startFrom = 1) => {
-	return Array.from({ length: count }, (_, i) => i + startFrom);
+const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+const getFirstDayOfMonth = (year, month) => {
+	const day = new Date(year, month, 1).getDay();
+	return day === 0 ? 6 : day - 1;
+};
+
+const generateMonthData = (year, month) => {
+	const daysInMonth = getDaysInMonth(year, month);
+	const firstDay = getFirstDayOfMonth(year, month);
+
+	const days = [];
+
+	for (let i = 0; i < firstDay; i++) {
+		days.push({ day: null, isEmpty: true });
+	}
+
+	for (let i = 1; i <= daysInMonth; i++) {
+		const date = new Date(year, month, i);
+		days.push({
+			day: i,
+			date: date,
+			isEmpty: false,
+		});
+	}
+
+	return days;
 };
 
 export const Calendar = () => {
 	const [viewMode, setViewMode] = useState('month');
+	const [selectedRange, setSelectedRange] = useState({
+		start: null,
+		end: null,
+	});
+
+	const handleViewModeChange = (newViewMode) => {
+		setViewMode(newViewMode);
+	};
+
+	const handleSelectionChange = (newSelection) => {
+		setSelectedRange(newSelection);
+
+		// Здесь можно сразу делать запрос к API
+		if (newSelection.start && newSelection.end) {
+			console.log('Выбран период для API:', newSelection);
+			// fetchDataForPeriod(newSelection);
+		}
+	};
 
 	return (
 		<S.CalendarBlock>
@@ -31,13 +73,13 @@ export const Calendar = () => {
 				<S.CalendarYearMonth>
 					<S.CalendarButtons
 						$active={viewMode === 'month'}
-						onClick={() => setViewMode('month')}
+						onClick={() => handleViewModeChange('month')}
 					>
 						Месяц
 					</S.CalendarButtons>
 					<S.CalendarButtons
 						$active={viewMode === 'year'}
-						onClick={() => setViewMode('year')}
+						onClick={() => handleViewModeChange('year')}
 					>
 						Год
 					</S.CalendarButtons>
@@ -46,73 +88,201 @@ export const Calendar = () => {
 
 			{viewMode === 'year' && <S.YearLine />}
 
-			{viewMode === 'month' ? <S.MonthScroll /> : <S.YearScroll />}
-
-			{viewMode === 'month' ? <MonthView /> : <YearView />}
+			{viewMode === 'month' ? (
+				<MonthView
+					selection={selectedRange}
+					onSelectionChange={handleSelectionChange}
+				/>
+			) : (
+				<YearView
+					selection={selectedRange}
+					onSelectionChange={handleSelectionChange}
+				/>
+			)}
 		</S.CalendarBlock>
 	);
 };
 
-const MonthView = () => (
-	<>
-		<S.DaysOfWeek>
-			{DAYS_OF_WEEK.map((day) => (
-				<S.DayOfWeek key={day}>{day}</S.DayOfWeek>
-			))}
-		</S.DaysOfWeek>
-		<S.MonthLine />
-		<S.Month>
-			<S.MonthTitle>Июль 2024</S.MonthTitle>
-			<S.Days>
-				{generateNumbers(31).map((day) =>
-					day === 10 ? (
-						<S.DayChecked key={day}>{day}</S.DayChecked>
-					) : (
-						<S.Day key={day}>{day}</S.Day>
-					),
-				)}
-			</S.Days>
-		</S.Month>
-		<S.Month>
-			<S.MonthTitle>Август 2024</S.MonthTitle>
-			<S.Days>
-				<S.Day style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}></S.Day>
-				<S.Day style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}></S.Day>
-				<S.Day style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}></S.Day>
-				{generateNumbers(11).map((day) => (
-					<S.Day key={day}>{day}</S.Day>
-				))}
-			</S.Days>
-		</S.Month>
-	</>
-);
+const MonthView = ({ selection, onSelectionChange }) => {
+	const [visibleMonths, setVisibleMonths] = useState([-1, 0, 1, 2]);
+	const scrollContainerRef = useRef(null);
+	const currentDate = new Date();
 
-const YearView = () => (
-	<>
-		<S.Year>
-			<S.YearMonths>
-				<S.MonthInYearChecked>Октябрь</S.MonthInYearChecked>
-				<S.MonthInYearChecked>Ноябрь</S.MonthInYearChecked>
-				<S.MonthInYearChecked>Декабрь</S.MonthInYearChecked>
-			</S.YearMonths>
-		</S.Year>
-		<S.Year>
-			<S.YearNumber>2025</S.YearNumber>
-			<S.YearMonths>
-				{MONTHS.map((month) => (
-					<S.MonthInYear key={month}>{month}</S.MonthInYear>
+	const handleDateClick = (date) => {
+		if (!date) return;
+
+		if (!selection.start || (selection.start && selection.end)) {
+			onSelectionChange({ start: date, end: null });
+		} else {
+			const newStart = date < selection.start ? date : selection.start;
+			const newEnd = date < selection.start ? selection.start : date;
+			onSelectionChange({ start: newStart, end: newEnd });
+		}
+	};
+
+	const loadMoreMonths = (direction) => {
+		if (direction === 'up') {
+			const firstIndex = visibleMonths[0];
+			setVisibleMonths((prev) => [firstIndex - 2, firstIndex - 1, ...prev]);
+		} else {
+			const lastIndex = visibleMonths[visibleMonths.length - 1];
+			setVisibleMonths((prev) => [...prev, lastIndex + 1, lastIndex + 2]);
+		}
+	};
+
+	const handleScroll = (e) => {
+		const { scrollTop, scrollHeight, clientHeight } = e.target;
+
+		if (scrollHeight - scrollTop <= clientHeight + 50) {
+			loadMoreMonths('down');
+		}
+
+		if (scrollTop <= 50 && visibleMonths[0] > -24) {
+			loadMoreMonths('up');
+		}
+	};
+
+	return (
+		<>
+			<S.DaysOfWeek>
+				{DAYS_OF_WEEK.map((day) => (
+					<S.DayOfWeek key={day}>{day}</S.DayOfWeek>
 				))}
-				{/* <MonthInYearChecked>Январь</MonthInYearChecked>
-				 */}
-			</S.YearMonths>
-		</S.Year>
-		<S.Year>
-			<S.YearNumber>2026</S.YearNumber>
-			<S.YearMonths>
-				{MONTHS.map((month) => (
-					<S.MonthInYear key={month}>{month}</S.MonthInYear>
-				))}
-			</S.YearMonths>
-		</S.Year>
-	</>
-);
+			</S.DaysOfWeek>
+			<S.MonthLine />
+
+			<S.ScrollContainer ref={scrollContainerRef} onScroll={handleScroll}>
+				{visibleMonths.map((monthOffset) => {
+					const targetDate = new Date(currentDate);
+					targetDate.setMonth(targetDate.getMonth() + monthOffset);
+
+					const year = targetDate.getFullYear();
+					const month = targetDate.getMonth();
+					const monthData = generateMonthData(year, month);
+
+					return (
+						<S.Month key={`${year}-${month}`}>
+							<S.MonthTitle>
+								{MONTHS[month]} {year}
+							</S.MonthTitle>
+							<S.Days>
+								{monthData.map((dayData, index) => {
+									if (dayData.isEmpty) {
+										return (
+											<S.EmptyDay key={`empty-${year}-${month}-${index}`} />
+										);
+									}
+
+									const isSelected =
+										selection.start && selection.end
+											? dayData.date >= selection.start &&
+												dayData.date <= selection.end
+											: selection.start &&
+												dayData.date.getTime() === selection.start.getTime();
+
+									const DayComponent = isSelected ? S.DayChecked : S.Day;
+
+									return (
+										<DayComponent
+											key={`${year}-${month}-${dayData.day}`}
+											onClick={() => handleDateClick(dayData.date)}
+										>
+											{dayData.day}
+										</DayComponent>
+									);
+								})}
+							</S.Days>
+						</S.Month>
+					);
+				})}
+			</S.ScrollContainer>
+		</>
+	);
+};
+
+const YearView = ({ selection, onSelectionChange }) => {
+	const [visibleYears, setVisibleYears] = useState([-1, 0, 1, 2]);
+	const currentDate = new Date();
+
+	const handleMonthClick = (year, month) => {
+		const monthStart = new Date(year, month, 1);
+		const monthEnd = new Date(year, month + 1, 0);
+
+		if (!selection.start || (selection.start && selection.end)) {
+			onSelectionChange({ start: monthStart, end: null });
+		} else {
+			const newStart =
+				monthStart < selection.start ? monthStart : selection.start;
+			const newEnd =
+				monthStart < selection.start
+					? new Date(
+							selection.start.getFullYear(),
+							selection.start.getMonth() + 1,
+							0,
+						)
+					: monthEnd;
+			onSelectionChange({ start: newStart, end: newEnd });
+		}
+	};
+
+	const loadMoreYears = (direction) => {
+		if (direction === 'up') {
+			const firstIndex = visibleYears[0];
+			setVisibleYears((prev) => [firstIndex - 1, ...prev]);
+		} else {
+			const lastIndex = visibleYears[visibleYears.length - 1];
+			setVisibleYears((prev) => [...prev, lastIndex + 1]);
+		}
+	};
+
+	const handleScroll = (e) => {
+		const { scrollTop, scrollHeight, clientHeight } = e.target;
+
+		if (scrollHeight - scrollTop <= clientHeight + 50) {
+			loadMoreYears('down');
+		}
+
+		if (scrollTop <= 50) {
+			loadMoreYears('up');
+		}
+	};
+
+	return (
+		<S.ScrollContainer onScroll={handleScroll}>
+			{visibleYears.map((yearOffset) => {
+				const year = currentDate.getFullYear() + yearOffset;
+
+				return (
+					<S.Year key={year}>
+						<S.YearNumber>{year}</S.YearNumber>
+						<S.YearMonths>
+							{MONTHS.map((month, monthIndex) => {
+								const monthStart = new Date(year, monthIndex, 1);
+								const isSelected =
+									selection.start && selection.end
+										? monthStart >= selection.start &&
+											monthStart <= selection.end
+										: selection.start &&
+											selection.start.getMonth() === monthIndex &&
+											selection.start.getFullYear() === year;
+
+								const MonthComponent = isSelected
+									? S.MonthInYearChecked
+									: S.MonthInYear;
+
+								return (
+									<MonthComponent
+										key={`${year}-${month}`}
+										onClick={() => handleMonthClick(year, monthIndex)}
+									>
+										{month}
+									</MonthComponent>
+								);
+							})}
+						</S.YearMonths>
+					</S.Year>
+				);
+			})}
+		</S.ScrollContainer>
+	);
+};
