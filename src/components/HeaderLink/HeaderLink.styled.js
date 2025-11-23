@@ -8,17 +8,19 @@ export const LinkContainer = styled.div`
 `;
 
 export const NavLinks = styled(NavLink)`
-	color: #000;
+	color: ${(props) => (props.$isActive ? '#1fa46c' : '#000000')};
 	text-align: center;
 	font-family: 'Montserrat', sans-serif;
 	font-size: 14px;
 	font-style: normal;
-	font-weight: 400;
+	font-weight: ${(props) => (props.$isActive ? '600' : '400')};
 	line-height: 170%; /* 23.8px */
 	cursor: pointer;
-	&.active {
-		color: #1fa46c;
-		text-decoration: underline;
-		font-weight: 600;
-	}
+	text-decoration: ${(props) =>
+		props.$isActive ? 'underline' : 'none'} !important;
+	//&.active {
+	//	color: #1fa46c;
+	//	text-decoration: underline;
+	//	font-weight: 600;
+	//}
 `;
