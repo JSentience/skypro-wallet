@@ -82,11 +82,33 @@ export const CategoryItem = styled.div`
 	border-radius: 30px;
 	background-color: ${(props) => (props.$active ? '#dbffe9' : '#f3f4f6')};
 	padding: 8px 20px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: #e8f5ee;
+	}
+
+	/* Стили для активного состояния */
+	${(props) =>
+		props.$active &&
+		`
+		background-color: #dbffe9;
+		
+		img {
+			filter: invert(48%) sepia(79%) saturate(384%) hue-rotate(106deg) brightness(94%) contrast(89%);
+		}
+	`}
 `;
 
 export const CategoryIcon = styled.img`
 	width: 14px;
 	height: 14px;
+	filter: ${(props) =>
+		props.$active
+			? 'invert(48%) sepia(79%) saturate(384%) hue-rotate(106deg) brightness(94%) contrast(89%)'
+			: 'none'};
+	transition: filter 0.2s ease;
 `;
 
 export const CategoryText = styled.p`
@@ -97,6 +119,7 @@ export const CategoryText = styled.p`
 	line-height: 15px;
 	text-align: center;
 	margin-left: 12px;
+	transition: color 0.2s ease;
 `;
 
 export const Button = styled.button`
@@ -116,4 +139,43 @@ export const ButtonText = styled.div`
 	font-weight: 600;
 	line-height: 15px;
 	text-align: center;
+`;
+
+export const ErrorMessage = styled.div`
+	background: #ffebee;
+	color: #c62828;
+	padding: 12px;
+	border-radius: 4px;
+	margin-bottom: 16px;
+	border: 1px solid #ffcdd2;
+`;
+
+export const Hint = styled.div`
+	font-size: 12px;
+	color: #666;
+	margin-top: 4px;
+`;
+
+export const ButtonContainer = styled.div`
+	display: flex;
+	gap: 12px;
+`;
+
+export const CancelButton = styled.button`
+	background: #6c757d;
+	color: white;
+	border: none;
+	padding: 12px 24px;
+	border-radius: 4px;
+	cursor: pointer;
+	flex: 1;
+
+	&:hover:not(:disabled) {
+		background: #545b62;
+	}
+
+	&:disabled {
+		background: #ccc;
+		cursor: not-allowed;
+	}
 `;
