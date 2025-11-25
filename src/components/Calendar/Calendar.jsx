@@ -45,24 +45,27 @@ const generateMonthData = (year, month) => {
 	return days;
 };
 
-export const Calendar = () => {
-	const [viewMode, setViewMode] = useState('month');
-	const [selectedRange, setSelectedRange] = useState({
-		start: null,
-		end: null,
+export const Calendar = ({ selectedRange, onSelectionChange }) => {
+	console.log('📅 Calendar props:', {
+		selectedRange: selectedRange,
+		hasStart: !!selectedRange?.start,
+		hasEnd: !!selectedRange?.end,
+		hasOnSelectionChange: !!onSelectionChange,
 	});
+
+	const [viewMode, setViewMode] = useState('month');
 
 	const handleViewModeChange = (newViewMode) => {
 		setViewMode(newViewMode);
 	};
 
 	const handleSelectionChange = (newSelection) => {
-		setSelectedRange(newSelection);
+		console.log('🔄 Calendar handleSelectionChange:', newSelection);
+		// Вызываем функцию из пропсов вместо setSelectedRange
+		onSelectionChange(newSelection);
 
-		// Здесь можно сразу делать запрос к API
 		if (newSelection.start && newSelection.end) {
 			console.log('Выбран период для API:', newSelection);
-			// fetchDataForPeriod(newSelection);
 		}
 	};
 
