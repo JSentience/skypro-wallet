@@ -1,29 +1,52 @@
 import styled from 'styled-components';
 
+export const ScrollContainer = styled.div`
+	max-height: 400px;
+	overflow-y: auto;
+	padding-right: 32px;
+	margin-right: -36px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: transparent;
+		border-radius: 30px;
+		margin: 8px 0;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(217, 217, 217, 1);
+		border-radius: 30px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: rgba(180, 180, 180, 1);
+	}
+
+	/* Для Firefox */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(217, 217, 217, 1) transparent;
+`;
+
 export const CalendarBlock = styled.div`
 	display: grid;
 	grid-column: span 4;
 	gap: 24px;
-	padding-top: 32px;
-	padding-right: 32px;
-	padding-left: 32px;
-	padding-bottom: 5px;
+	padding: 32px;
 	border-radius: 30px;
 	box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background: rgba(255, 255, 255, 1);
 	position: relative;
-`;
+	overflow: hidden;
 
-export const MonthLine = styled.div`
-	margin: 0 -32px;
-	padding: 0 32px;
-	border-bottom: 0.5px solid rgba(153, 153, 153, 1);
-`;
-
-export const YearLine = styled.div`
-	margin: 0 -32px;
-	padding: 0 32px;
-	border-bottom: 0.5px solid rgba(153, 153, 153, 1);
+	@media (max-width: 1024px) {
+		width: min-content;
+	}
 `;
 
 export const CalendarNav = styled.div`
@@ -39,6 +62,9 @@ export const CalendarPeriod = styled.p`
 	line-height: 29px;
 	letter-spacing: 0px;
 	text-align: center;
+	@media (max-width: 1024px) {
+		font-size: 20px;
+	}
 `;
 
 export const CalendarYearMonth = styled.div`
@@ -93,12 +119,16 @@ export const MonthTitle = styled.h3`
 	line-height: 20px;
 	letter-spacing: 0px;
 	text-align: left;
+	@media (max-width: 1024px) {
+		font-size: 15px;
+	}
 `;
 
 export const Days = styled.div`
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
 	gap: 6px;
+	width: 100%;
 `;
 
 export const Day = styled.div`
@@ -107,11 +137,18 @@ export const Day = styled.div`
 	border-radius: 60px;
 	background: rgba(244, 245, 246, 1);
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 10;
-	padding: 10px 16px;
+	cursor: pointer;
+
+	&:hover {
+		background: rgba(219, 255, 233, 0.8);
+	}
+
+	@media (max-width: 1024px) {
+		width: 35px;
+		height: 35px;
+	}
 `;
 
 // потом сделать через псевдокласс,
@@ -146,7 +183,7 @@ export const YearMonths = styled.div`
 export const MonthInYear = styled.div`
 	border-radius: 30px;
 	background: rgba(244, 245, 246, 1);
-	width: 101px;
+	width: 96px;
 	height: 34px;
 	display: flex;
 	flex-direction: row;
@@ -161,6 +198,7 @@ export const MonthInYear = styled.div`
 	line-height: 15px;
 	letter-spacing: 0%;
 	text-align: center;
+	cursor: pointer;
 `;
 
 // потом сделать через псевдокласс,
@@ -186,3 +224,23 @@ export const YearScroll = styled(MonthScroll)`
 	right: 0;
 	top: 250px;
 `;
+
+export const EmptyDay = styled.div`
+	width: 40px;
+	height: 40px;
+	background: transparent;
+
+	@media (max-width: 1024px) {
+		width: 35px;
+		height: 35px;
+	}
+`;
+
+export const MonthLine = styled.div`
+	margin: 0 -32px;
+	padding: 0 32px;
+	border-bottom: 0.5px solid rgba(153, 153, 153, 1);
+	margin-bottom: 16px;
+`;
+
+export const YearLine = styled(MonthLine)``;
