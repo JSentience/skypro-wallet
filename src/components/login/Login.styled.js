@@ -114,3 +114,16 @@ export const ChangeFormLink = styled.a`
 	cursor: pointer;
 	text-decoration: underline;
 `;
+
+export const ErrorStyle = styled.div`
+	color: red;
+	display: flex;
+	align-items: center;
+	text-align: center;
+`;
+export const SuccessStyle = styled.div`
+	color: green;
+	display: flex;
+	align-items: center;
+	text-align: center;
+`;

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+	//height: 870px;
+	//margin-top: 60px;
 	display: flex;
-	/* height: 870px; */
 	height: 100vh;
 	max-width: 1440px;
 	margin: 0 auto;
