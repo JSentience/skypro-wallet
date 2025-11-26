@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
 		const token = localStorage.getItem('walletToken');
 		const userName = localStorage.getItem('userName');
 		const userLogin = localStorage.getItem('userLogin');
-		console.log('AuthContext useEffect:', { token, userName, userLogin });
 		if (token) {
 			setIsAuthenticated(true);
 			setUser({ token, name: userName, login: userLogin });
