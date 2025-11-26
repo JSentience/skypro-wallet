@@ -22,7 +22,7 @@ const REVERSE_CATEGORY_MAPPING = {
 	others: 'Другое',
 };
 
-export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
+export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	const [formData, setFormData] = useState({
 		description: '',
 		category: '', // Пустая категория по умолчанию
@@ -304,11 +304,6 @@ export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
 					</S.InputGroup>
 
 					<S.ButtonContainer>
-						{onCancel && (
-							<S.CancelButton onClick={onCancel} disabled={loading}>
-								<S.ButtonText>Отмена</S.ButtonText>
-							</S.CancelButton>
-						)}
 						<S.Button onClick={handleSave} disabled={loading}>
 							<S.ButtonText>
 								{loading
