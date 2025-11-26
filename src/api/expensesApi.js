@@ -54,9 +54,42 @@ export const createTransaction = async (transactionData) => {
 	}
 };
 
+export const deleteTransaction = async (transactionId) => {
+	try {
+		const token = getToken();
+
+		if (!token) {
+			throw new Error('Токен авторизации не найден');
+		}
+
+		if (!transactionId) {
+			throw new Error('ID транзакции обязателен');
+		}
+
+		console.log('Удаление транзакции с ID:', transactionId);
+
+		const response = await axios.delete(
+			`${BASE_URL}/transactions/${transactionId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': '',
+				},
+			},
+		);
+
+		console.log('Транзакция успешно удалена, статус:', response.status);
+		return response.data;
+	} catch (error) {
+		console.error('Ошибка при удалении транзакции:', error);
+		throw new Error(error.response?.data?.message || error.message);
+	}
+};
+
 export const expensesApi = {
 	getTransactions,
 	createTransaction,
+	deleteTransaction,
 };
 
 export default expensesApi;

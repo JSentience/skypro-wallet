@@ -2,10 +2,12 @@ import { useState } from 'react';
 import * as S from './ExpenseTable.styled';
 import { FilterCategory } from './FilterCategory';
 import { Filter } from './Filter';
+import { deleteTransaction } from '../../api/expensesApi';
 
-export const ExpenseTable = ({ transactions, onEdit }) => {
+export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	const [deletingId, setDeletingId] = useState(null);
 
 	// Маппинг категорий с английских на русские
 	const CATEGORY_NAMES = {
@@ -38,6 +40,27 @@ export const ExpenseTable = ({ transactions, onEdit }) => {
 
 	const handleEditClick = (transaction) => {
 		onEdit(transaction);
+	};
+
+	const handleDeleteClick = async (transaction) => {
+		// if (!window.confirm('Вы уверены, что хотите удалить эту транзакцию?')) {
+		// 	return;
+		// }
+
+		try {
+			setDeletingId(transaction._id);
+			const updatedTransactions = await deleteTransaction(transaction._id);
+
+			// Вызываем колбэк с обновленными данными
+			if (onTransactionUpdate) {
+				onTransactionUpdate(updatedTransactions);
+			}
+		} catch (error) {
+			console.error('Ошибка при удалении:', error);
+			alert('Не удалось удалить транзакцию: ' + error.message);
+		} finally {
+			setDeletingId(null);
+		}
 	};
 
 	// Функция для получения русского названия категории
@@ -121,6 +144,8 @@ export const ExpenseTable = ({ transactions, onEdit }) => {
 										$marginright="1px"
 										src="/img_del.svg"
 										alt="Удалить"
+										onClick={() => handleDeleteClick(transaction)}
+										disabled={deletingId === transaction._id}
 									/>
 								</S.ActionsContainer>
 							</S.TableRow>

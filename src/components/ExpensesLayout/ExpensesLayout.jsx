@@ -56,6 +56,17 @@ export const ExpensesLayout = () => {
 		setEditingExpense(null);
 	};
 
+	const handleTransactionUpdate = async (responseData) => {
+		try {
+			console.log('Данные от API при удалении:', responseData);
+
+			// Всегда перезагружаем список транзакций после удаления
+			await fetchTransactions();
+		} catch (err) {
+			console.error('Ошибка при обновлении списка после удаления:', err);
+		}
+	};
+
 	if (loading) {
 		return (
 			<div>
@@ -78,7 +89,11 @@ export const ExpensesLayout = () => {
 		<div>
 			<S.PageTitle>Мои расходы</S.PageTitle>
 			<S.MainContent>
-				<ExpenseTable transactions={transactions} onEdit={handleEdit} />
+				<ExpenseTable
+					transactions={transactions}
+					onEdit={handleEdit}
+					onTransactionUpdate={handleTransactionUpdate}
+				/>
 				<NewExpense
 					isEditing={isEditing}
 					editingExpense={editingExpense}
