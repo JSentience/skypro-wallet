@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import * as S from './NewExpense.styled';
-import { createTransaction } from '../../api/expensesApi';
+import { createTransaction, updateTransaction } from '../../api/expensesApi';
 
 // Маппинг категорий с русскими названиями на английские
 const CATEGORY_MAPPING = {
@@ -22,14 +22,14 @@ const REVERSE_CATEGORY_MAPPING = {
 	others: 'Другое',
 };
 
-export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
+export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
 	const [formData, setFormData] = useState({
 		description: '',
-		category: '', // Пустая категория по умолчанию
+		category: '',
 		date: '',
 		sum: '',
 	});
-	const [selectedCategory, setSelectedCategory] = useState(''); // Пустая выбранная категория
+	const [selectedCategory, setSelectedCategory] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const dateInputRef = useRef(null);
@@ -207,7 +207,18 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 
 			console.log('Отправка данных на сервер:', transactionData);
 
-			const updatedTransactions = await createTransaction(transactionData);
+			let updatedTransactions;
+
+			if (isEditing && editingExpense) {
+				// Редактирование существующей транзакции
+				updatedTransactions = await updateTransaction(
+					editingExpense._id,
+					transactionData,
+				);
+			} else {
+				// Создание новой транзакции
+				updatedTransactions = await createTransaction(transactionData);
+			}
 
 			// Вызываем колбэк с обновленными данными
 			if (onSave) {
