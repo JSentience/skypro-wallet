@@ -29,29 +29,19 @@ export const createTransaction = async (transactionData) => {
 		const token = getToken();
 
 		if (!token) {
-			throw new Error(
-				'Токен авторизации не найден. Пожалуйста, войдите в систему.',
-			);
+			throw new Error('Токен авторизации не найден');
 		}
 
 		console.log('Создание транзакции с данными:', transactionData);
 
-		// Используем тот же подход, что и в authApi.js - создаем строку запроса вручную
-		const dataString =
-			`description=${encodeURIComponent(transactionData.description)}` +
-			`&sum=${encodeURIComponent(transactionData.sum)}` +
-			`&category=${encodeURIComponent(transactionData.category)}` +
-			`&date=${encodeURIComponent(transactionData.date)}`;
-
-		console.log('Отправляемая строка данных:', dataString);
-
+		// Отправляем как простой объект - axios автоматически преобразует в JSON
 		const response = await axios.post(
 			`${BASE_URL}/transactions`,
-			{ dataString },
+			transactionData,
 			{
 				headers: {
 					Authorization: `Bearer ${token}`,
-					// НЕ добавляем Content-Type, как в authApi.js
+					'Content-Type': '',
 				},
 			},
 		);
@@ -60,23 +50,7 @@ export const createTransaction = async (transactionData) => {
 		return response.data;
 	} catch (error) {
 		console.error('Ошибка при создании транзакции:', error);
-
-		if (error.response) {
-			// Сервер ответил с ошибкой
-			const serverError =
-				error.response.data?.error || error.response.data?.message;
-			throw new Error(
-				serverError || `Ошибка сервера: ${error.response.status}`,
-			);
-		} else if (error.request) {
-			// Запрос был отправлен, но ответ не получен
-			throw new Error('Сервер не отвечает. Попробуйте позже.');
-		} else {
-			// Другие ошибки
-			throw new Error(
-				error.message || 'Неизвестная ошибка при создании транзакции',
-			);
-		}
+		throw new Error(error.response?.data?.message || error.message);
 	}
 };
 

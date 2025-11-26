@@ -25,11 +25,11 @@ const REVERSE_CATEGORY_MAPPING = {
 export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
 	const [formData, setFormData] = useState({
 		description: '',
-		category: '',
+		category: '', // Пустая категория по умолчанию
 		date: '',
 		sum: '',
 	});
-	const [selectedCategory, setSelectedCategory] = useState('');
+	const [selectedCategory, setSelectedCategory] = useState(''); // Пустая выбранная категория
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
 	const dateInputRef = useRef(null);
@@ -131,17 +131,6 @@ export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
 		return formatted;
 	};
 
-	// Обработчик фокуса на поле даты
-	const handleDateFocus = () => {
-		// Если поле пустое, добавляем маску при фокусе
-		if (!formData.date) {
-			setFormData((prev) => ({
-				...prev,
-				date: '',
-			}));
-		}
-	};
-
 	// Обработчик ввода в поле даты
 	const handleDateInput = (e) => {
 		const value = e.target.value;
@@ -199,6 +188,11 @@ export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
 			// Проверяем, что дата заполнена полностью
 			if (formData.date.length !== 10) {
 				throw new Error('Дата должна быть в формате дд.мм.гггг');
+			}
+
+			// Проверяем, что категория выбрана
+			if (!formData.category) {
+				throw new Error('Выберите категорию');
 			}
 
 			// Конвертируем дату из дд.мм.гггг в М-Д-ГГГГ
@@ -293,11 +287,9 @@ export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
 							type="text"
 							value={formData.date}
 							onChange={handleDateInput}
-							onFocus={handleDateFocus}
 							placeholder="Введите дату"
 							disabled={loading}
 						/>
-						{/* Убрана подпись с форматом */}
 					</S.InputGroup>
 
 					<S.InputGroup>
