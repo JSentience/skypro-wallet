@@ -9,6 +9,10 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [deletingId, setDeletingId] = useState(null);
 
+	// Состояния для фильтров
+	const [selectedCategory, setSelectedCategory] = useState(null);
+	const [selectedSort, setSelectedSort] = useState(null);
+
 	// Маппинг категорий с английских на русские
 	const CATEGORY_NAMES = {
 		food: 'Еда',
@@ -17,6 +21,16 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 		joy: 'Развлечения',
 		education: 'Образование',
 		others: 'Другое',
+	};
+
+	// Обратный маппинг для фильтрации
+	const REVERSE_CATEGORY_NAMES = {
+		Еда: 'food',
+		Транспорт: 'transport',
+		Жилье: 'housing',
+		Развлечения: 'joy',
+		Образование: 'education',
+		Другое: 'others',
 	};
 
 	const toggleCategory = () => {
@@ -38,20 +52,35 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 		setIsFilterOpen(false);
 	};
 
+	const handleCategorySelect = (categoryName) => {
+		// Если нажали на уже выбранную категорию - снимаем выбор
+		if (selectedCategory === categoryName) {
+			setSelectedCategory(null);
+		} else {
+			setSelectedCategory(categoryName);
+		}
+		setIsCategoryOpen(false);
+	};
+
+	const handleSortSelect = (sortType) => {
+		// Если нажали на уже выбранную сортировку - снимаем выбор
+		if (selectedSort === sortType) {
+			setSelectedSort(null);
+		} else {
+			setSelectedSort(sortType);
+		}
+		setIsFilterOpen(false);
+	};
+
 	const handleEditClick = (transaction) => {
 		onEdit(transaction);
 	};
 
 	const handleDeleteClick = async (transaction) => {
-		// if (!window.confirm('Вы уверены, что хотите удалить эту транзакцию?')) {
-		// 	return;
-		// }
-
 		try {
 			setDeletingId(transaction._id);
 			const updatedTransactions = await deleteTransaction(transaction._id);
 
-			// Вызываем колбэк с обновленными данными
 			if (onTransactionUpdate) {
 				onTransactionUpdate(updatedTransactions);
 			}
@@ -79,8 +108,39 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 		return `${amount} руб.`;
 	};
 
-	// Проверяем что transactions - массив
-	const displayTransactions = Array.isArray(transactions) ? transactions : [];
+	// Функция для отображения текста в кнопке фильтра категории
+	const getCategoryButtonText = () => {
+		return selectedCategory || '';
+	};
+
+	// Функция для отображения текста в кнопке сортировки
+	const getSortButtonText = () => {
+		return selectedSort || '';
+	};
+
+	// Фильтрация и сортировка транзакций
+	const filteredAndSortedTransactions = () => {
+		let result = Array.isArray(transactions) ? [...transactions] : [];
+
+		// Фильтрация по категории (только если категория выбрана)
+		if (selectedCategory) {
+			const categoryKey = REVERSE_CATEGORY_NAMES[selectedCategory];
+			result = result.filter(
+				(transaction) => transaction.category === categoryKey,
+			);
+		}
+
+		// Сортировка (только если сортировка выбрана)
+		if (selectedSort === 'Дате') {
+			result.sort((a, b) => new Date(b.date) - new Date(a.date)); // от новых к старым
+		} else if (selectedSort === 'Сумме') {
+			result.sort((a, b) => b.sum - a.sum); // от больших к маленьким
+		}
+
+		return result;
+	};
+
+	const displayTransactions = filteredAndSortedTransactions();
 
 	return (
 		<div>
@@ -92,18 +152,32 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 							<S.FilterSection $marginleft="100px">
 								<S.FilterText>Фильтровать по категории</S.FilterText>
 								<S.FilterButton onClick={toggleCategory}>
-									<S.FilterValue>еда</S.FilterValue>
+									<S.FilterValue>{getCategoryButtonText()}</S.FilterValue>
 									<S.FilterIcon src="/Polygon 3.svg" alt="" />
 								</S.FilterButton>
-								{isCategoryOpen && <FilterCategory onClose={closeAllModals} />}
+								{isCategoryOpen && (
+									<FilterCategory
+										onClose={closeAllModals}
+										selectedCategory={selectedCategory}
+										onCategorySelect={handleCategorySelect}
+									/>
+								)}
 							</S.FilterSection>
 							<S.FilterSection $marginleft="24px" $marginright="34px">
 								<S.FilterText>Сортировать по</S.FilterText>
 								<S.FilterButton onClick={toggleFilter}>
-									<S.FilterValue $marginleft="4px">дате</S.FilterValue>
+									<S.FilterValue $marginleft="4px">
+										{getSortButtonText()}
+									</S.FilterValue>
 									<S.FilterIcon src="/Polygon 3.svg" alt="" />
 								</S.FilterButton>
-								{isFilterOpen && <Filter onClose={closeAllModals} />}
+								{isFilterOpen && (
+									<Filter
+										onClose={closeAllModals}
+										selectedSort={selectedSort}
+										onSortSelect={handleSortSelect}
+									/>
+								)}
 							</S.FilterSection>
 						</S.ItemsContainer>
 					</S.HeaderContainer>
@@ -118,7 +192,11 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 				<S.TableContent>
 					{displayTransactions.length === 0 ? (
 						<S.EmptyState>
-							<S.EmptyText>Транзакций пока нет</S.EmptyText>
+							<S.EmptyText>
+								{transactions.length === 0
+									? 'Транзакций пока нет'
+									: 'Нет транзакций по выбранному фильтру'}
+							</S.EmptyText>
 						</S.EmptyState>
 					) : (
 						displayTransactions.map((transaction) => (

@@ -22,7 +22,7 @@ const REVERSE_CATEGORY_MAPPING = {
 	others: 'Другое',
 };
 
-export const NewExpense = ({ isEditing, editingExpense, onSave, onCancel }) => {
+export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	const [formData, setFormData] = useState({
 		description: '',
 		category: '',
