@@ -128,9 +128,18 @@ export const ExpenseTable = ({
 		return date.toLocaleDateString('ru-RU');
 	};
 
-	// Функция для форматирования суммы
+	// Функция для форматирования суммы в формате "2 500 руб."
 	const formatAmount = (amount) => {
-		return `${amount} руб.`;
+		// Проверяем, что amount - число
+		const numberAmount = typeof amount === 'number' ? amount : Number(amount);
+
+		// Форматируем с пробелами как тысячи и добавляем "руб."
+		if (isNaN(numberAmount)) {
+			return '0 руб.';
+		}
+
+		const formattedAmount = numberAmount.toLocaleString('ru-RU');
+		return `${formattedAmount} руб.`;
 	};
 
 	// Функция для отображения текста в кнопке фильтра категории

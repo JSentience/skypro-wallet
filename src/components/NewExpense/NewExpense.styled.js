@@ -170,3 +170,13 @@ export const FieldError = styled.div`
 	margin-top: 4px;
 	font-family: 'Montserrat', sans-serif;
 `;
+
+export const SumInput = styled(Input)`
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	-moz-appearance: textfield;
+	appearance: textfield;
+`;

@@ -50,7 +50,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 				description: editingExpense.description || '',
 				category: editingExpense.category || '',
 				date: formatDateForInput(editingExpense.date) || '',
-				sum: editingExpense.sum?.toString() || '',
+				sum: formatSumForDisplay(editingExpense.sum?.toString()) || '',
 			});
 			setSelectedCategory(categoryName);
 		} else {
@@ -71,6 +71,43 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 		});
 		setError('');
 	}, [isEditing, editingExpense]);
+
+	// Функция для форматирования суммы для отображения (2 500)
+	const formatSumForDisplay = (sumString) => {
+		if (!sumString) return '';
+
+		// Убираем все нецифровые символы (кроме точек для десятичных, но у нас целые числа)
+		const numbers = sumString.replace(/\D/g, '');
+
+		if (!numbers) return '';
+
+		// Форматируем с пробелами как тысячи
+		return parseInt(numbers, 10).toLocaleString('ru-RU');
+	};
+
+	// Функция для преобразования отформатированной суммы в число (убираем пробелы)
+	const parseSumToNumber = (formattedSum) => {
+		if (!formattedSum) return 0;
+
+		// Убираем все пробелы и преобразуем в число
+		return parseInt(formattedSum.replace(/\s/g, ''), 10);
+	};
+
+	// Функция для применения маски суммы при вводе
+	const applySumMask = (value) => {
+		// Удаляем все нецифровые символы
+		let numbers = value.replace(/\D/g, '');
+
+		// Ограничиваем максимальную длину (например, 9 цифр = 999 999 999)
+		if (numbers.length > 9) {
+			numbers = numbers.substring(0, 9);
+		}
+
+		if (!numbers) return '';
+
+		// Форматируем с пробелами
+		return parseInt(numbers, 10).toLocaleString('ru-RU');
+	};
 
 	// Функция для форматирования даты из API в формат дд.мм.гггг
 	const formatDateForInput = (dateString) => {
@@ -157,9 +194,28 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 		setError('');
 	};
 
+	// Обработчик ввода в поле суммы
+	const handleSumInput = (e) => {
+		const value = e.target.value;
+		const maskedValue = applySumMask(value);
+
+		setFormData((prev) => ({
+			...prev,
+			sum: maskedValue,
+		}));
+		setFieldErrors((prev) => ({ ...prev, sum: '' }));
+		setError('');
+	};
+
 	const handleInputChange = (field, value) => {
 		if (field === 'date') {
 			const maskedValue = applyDateMask(value);
+			setFormData((prev) => ({
+				...prev,
+				[field]: maskedValue,
+			}));
+		} else if (field === 'sum') {
+			const maskedValue = applySumMask(value);
 			setFormData((prev) => ({
 				...prev,
 				[field]: maskedValue,
@@ -203,10 +259,11 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 		}
 
 		// Валидация суммы
+		const sumValue = parseSumToNumber(formData.sum);
 		if (!formData.sum) {
 			errors.sum = 'Сумма обязательна для заполнения';
 			isValid = false;
-		} else if (isNaN(formData.sum) || Number(formData.sum) <= 0) {
+		} else if (isNaN(sumValue) || sumValue <= 0) {
 			errors.sum = 'Введите корректную сумму';
 			isValid = false;
 		}
@@ -243,9 +300,12 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 			// Конвертируем дату из дд.мм.гггг в М-Д-ГГГГ
 			const serverDate = convertDateToServerFormat(formData.date);
 
+			// Преобразуем отформатированную сумму в число (убираем пробелы)
+			const sumValue = parseSumToNumber(formData.sum);
+
 			const transactionData = {
 				description: formData.description,
-				sum: Number(formData.sum),
+				sum: sumValue,
 				category: formData.category,
 				date: serverDate,
 			};
@@ -369,10 +429,11 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 
 					<S.InputGroup>
 						<S.InputLabel>Сумма</S.InputLabel>
-						<S.Input
-							type="number"
+						<S.SumInput
+							type="text"
+							inputMode="numeric"
 							value={formData.sum}
-							onChange={(e) => handleInputChange('sum', e.target.value)}
+							onChange={handleSumInput}
 							placeholder="Введите сумму"
 							disabled={loading}
 							$error={!!fieldErrors.sum}
