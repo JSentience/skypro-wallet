@@ -1,6 +1,6 @@
 import * as S from './FilterCategory.styled';
 
-export const FilterCategory = ({ selectedCategory, onCategorySelect }) => {
+export const FilterCategory = ({ onCategorySelect, isCategoryActive }) => {
 	const categories = [
 		{ name: 'Еда', icon: '/bag.svg' },
 		{ name: 'Транспорт', icon: '/car.svg' },
@@ -20,11 +20,15 @@ export const FilterCategory = ({ selectedCategory, onCategorySelect }) => {
 				{categories.map((category) => (
 					<S.CategoryItem
 						key={category.name}
-						$active={selectedCategory === category.name}
+						$active={isCategoryActive(category.name)}
 						onClick={() => handleCategoryClick(category.name)}
 					>
-						<S.CategoryIcon src={category.icon} alt={category.name} />
-						<S.CategoryText $active={selectedCategory === category.name}>
+						<S.CategoryIcon
+							src={category.icon}
+							alt={category.name}
+							$active={isCategoryActive(category.name)}
+						/>
+						<S.CategoryText $active={isCategoryActive(category.name)}>
 							{category.name}
 						</S.CategoryText>
 					</S.CategoryItem>

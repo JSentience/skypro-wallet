@@ -32,6 +32,12 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	const [selectedCategory, setSelectedCategory] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
+	const [fieldErrors, setFieldErrors] = useState({
+		description: '',
+		category: '',
+		date: '',
+		sum: '',
+	});
 	const dateInputRef = useRef(null);
 
 	// Инициализация формы при редактировании
@@ -57,6 +63,13 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 			});
 			setSelectedCategory('');
 		}
+		setFieldErrors({
+			description: '',
+			category: '',
+			date: '',
+			sum: '',
+		});
+		setError('');
 	}, [isEditing, editingExpense]);
 
 	// Функция для форматирования даты из API в формат дд.мм.гггг
@@ -140,6 +153,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 			...prev,
 			date: maskedValue,
 		}));
+		setFieldErrors((prev) => ({ ...prev, date: '' }));
 		setError('');
 	};
 
@@ -156,6 +170,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 				[field]: value,
 			}));
 		}
+		setFieldErrors((prev) => ({ ...prev, [field]: '' }));
 		setError('');
 	};
 
@@ -165,6 +180,54 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 			...prev,
 			category: CATEGORY_MAPPING[categoryName],
 		}));
+		setFieldErrors((prev) => ({ ...prev, category: '' }));
+		setError('');
+	};
+
+	const validateForm = () => {
+		const errors = {
+			description: '',
+			category: '',
+			date: '',
+			sum: '',
+		};
+		let isValid = true;
+
+		// Валидация описания
+		if (!formData.description) {
+			errors.description = 'Описание обязательно для заполнения';
+			isValid = false;
+		} else if (formData.description.length < 4) {
+			errors.description = 'Описание должно содержать минимум 4 символа';
+			isValid = false;
+		}
+
+		// Валидация суммы
+		if (!formData.sum) {
+			errors.sum = 'Сумма обязательна для заполнения';
+			isValid = false;
+		} else if (isNaN(formData.sum) || Number(formData.sum) <= 0) {
+			errors.sum = 'Введите корректную сумму';
+			isValid = false;
+		}
+
+		// Валидация даты
+		if (!formData.date) {
+			errors.date = 'Дата обязательна для заполнения';
+			isValid = false;
+		} else if (formData.date.length !== 10) {
+			errors.date = 'Дата должна быть в формате дд.мм.гггг';
+			isValid = false;
+		}
+
+		// Валидация категории
+		if (!formData.category) {
+			errors.category = 'Выберите категорию';
+			isValid = false;
+		}
+
+		setFieldErrors(errors);
+		return isValid;
 	};
 
 	const handleSave = async () => {
@@ -172,27 +235,9 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 			setLoading(true);
 			setError('');
 
-			// Валидация
-			if (!formData.description || formData.description.length < 4) {
-				throw new Error('Описание должно содержать минимум 4 символа');
-			}
-
-			if (!formData.sum || isNaN(formData.sum) || Number(formData.sum) <= 0) {
-				throw new Error('Введите корректную сумму');
-			}
-
-			if (!formData.date) {
-				throw new Error('Введите дату');
-			}
-
-			// Проверяем, что дата заполнена полностью
-			if (formData.date.length !== 10) {
-				throw new Error('Дата должна быть в формате дд.мм.гггг');
-			}
-
-			// Проверяем, что категория выбрана
-			if (!formData.category) {
-				throw new Error('Выберите категорию');
+			// Валидация формы
+			if (!validateForm()) {
+				return;
 			}
 
 			// Конвертируем дату из дд.мм.гггг в М-Д-ГГГГ
@@ -234,6 +279,12 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 					sum: '',
 				});
 				setSelectedCategory('');
+				setFieldErrors({
+					description: '',
+					category: '',
+					date: '',
+					sum: '',
+				});
 			}
 		} catch (err) {
 			console.error('Ошибка при сохранении:', err);
@@ -268,7 +319,12 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 							onChange={(e) => handleInputChange('description', e.target.value)}
 							placeholder="Введите описание расхода (минимум 4 символа)"
 							disabled={loading}
+							$error={!!fieldErrors.description}
+							$filled={!!formData.description}
 						/>
+						{fieldErrors.description && (
+							<S.FieldError>{fieldErrors.description}</S.FieldError>
+						)}
 					</S.InputGroup>
 
 					<S.CategorySection>
@@ -289,6 +345,9 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 								</S.CategoryItem>
 							))}
 						</S.CategoryGrid>
+						{fieldErrors.category && (
+							<S.FieldError>{fieldErrors.category}</S.FieldError>
+						)}
 					</S.CategorySection>
 
 					<S.InputGroup>
@@ -300,7 +359,12 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 							onChange={handleDateInput}
 							placeholder="Введите дату"
 							disabled={loading}
+							$error={!!fieldErrors.date}
+							$filled={!!formData.date}
 						/>
+						{fieldErrors.date && (
+							<S.FieldError>{fieldErrors.date}</S.FieldError>
+						)}
 					</S.InputGroup>
 
 					<S.InputGroup>
@@ -311,7 +375,10 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 							onChange={(e) => handleInputChange('sum', e.target.value)}
 							placeholder="Введите сумму"
 							disabled={loading}
+							$error={!!fieldErrors.sum}
+							$filled={!!formData.sum}
 						/>
+						{fieldErrors.sum && <S.FieldError>{fieldErrors.sum}</S.FieldError>}
 					</S.InputGroup>
 
 					<S.ButtonContainer>

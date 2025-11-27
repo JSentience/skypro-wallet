@@ -1,6 +1,6 @@
 import * as S from './Filter.styled';
 
-export const Filter = ({ selectedSort, onSortSelect }) => {
+export const Filter = ({ onSortSelect, isSortActive }) => {
 	const sortOptions = ['Дате', 'Сумме'];
 
 	const handleSortClick = (sortType) => {
@@ -13,10 +13,10 @@ export const Filter = ({ selectedSort, onSortSelect }) => {
 				{sortOptions.map((sortType) => (
 					<S.FilterItem
 						key={sortType}
-						$active={selectedSort === sortType}
+						$active={isSortActive(sortType)}
 						onClick={() => handleSortClick(sortType)}
 					>
-						<S.FilterText $active={selectedSort === sortType}>
+						<S.FilterText $active={isSortActive(sortType)}>
 							{sortType}
 						</S.FilterText>
 					</S.FilterItem>

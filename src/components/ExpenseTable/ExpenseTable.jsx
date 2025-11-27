@@ -4,14 +4,16 @@ import { FilterCategory } from './FilterCategory';
 import { Filter } from './Filter';
 import { deleteTransaction } from '../../api/expensesApi';
 
-export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
+export const ExpenseTable = ({
+	transactions,
+	onEdit,
+	onTransactionUpdate,
+	filters,
+	onFiltersChange,
+}) => {
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [deletingId, setDeletingId] = useState(null);
-
-	// Состояния для фильтров
-	const [selectedCategory, setSelectedCategory] = useState(null);
-	const [selectedSort, setSelectedSort] = useState(null);
 
 	// Маппинг категорий с английских на русские
 	const CATEGORY_NAMES = {
@@ -53,22 +55,45 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 	};
 
 	const handleCategorySelect = (categoryName) => {
-		// Если нажали на уже выбранную категорию - снимаем выбор
-		if (selectedCategory === categoryName) {
-			setSelectedCategory(null);
+		const categoryKey = REVERSE_CATEGORY_NAMES[categoryName];
+		let newFilterBy = [];
+
+		// Если категория уже выбрана - убираем ее, иначе добавляем
+		if (filters.filterBy && filters.filterBy.includes(categoryKey)) {
+			newFilterBy = filters.filterBy.filter((cat) => cat !== categoryKey);
 		} else {
-			setSelectedCategory(categoryName);
+			newFilterBy = [...(filters.filterBy || []), categoryKey];
 		}
+
+		onFiltersChange({
+			...filters,
+			filterBy: newFilterBy,
+		});
 		setIsCategoryOpen(false);
 	};
 
 	const handleSortSelect = (sortType) => {
-		// Если нажали на уже выбранную сортировку - снимаем выбор
-		if (selectedSort === sortType) {
-			setSelectedSort(null);
+		let newSortBy = null;
+
+		// Маппинг русских названий на английские для API
+		const sortMapping = {
+			Дате: 'date',
+			Сумме: 'sum',
+		};
+
+		const sortKey = sortMapping[sortType];
+
+		// Если сортировка уже выбрана - снимаем, иначе устанавливаем
+		if (filters.sortBy === sortKey) {
+			newSortBy = null;
 		} else {
-			setSelectedSort(sortType);
+			newSortBy = sortKey;
 		}
+
+		onFiltersChange({
+			...filters,
+			sortBy: newSortBy,
+		});
 		setIsFilterOpen(false);
 	};
 
@@ -110,37 +135,45 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 
 	// Функция для отображения текста в кнопке фильтра категории
 	const getCategoryButtonText = () => {
-		return selectedCategory || '';
+		if (!filters.filterBy || filters.filterBy.length === 0) {
+			return '';
+		}
+
+		// Показываем первую выбранную категорию или количество выбранных
+		if (filters.filterBy.length === 1) {
+			return CATEGORY_NAMES[filters.filterBy[0]] || '';
+		} else {
+			return `выбрано (${filters.filterBy.length})`;
+		}
 	};
 
 	// Функция для отображения текста в кнопке сортировки
 	const getSortButtonText = () => {
-		return selectedSort || '';
+		const sortMapping = {
+			date: 'Дате',
+			sum: 'Сумме',
+		};
+
+		return filters.sortBy ? sortMapping[filters.sortBy] : '';
 	};
 
-	// Фильтрация и сортировка транзакций
-	const filteredAndSortedTransactions = () => {
-		let result = Array.isArray(transactions) ? [...transactions] : [];
-
-		// Фильтрация по категории (только если категория выбрана)
-		if (selectedCategory) {
-			const categoryKey = REVERSE_CATEGORY_NAMES[selectedCategory];
-			result = result.filter(
-				(transaction) => transaction.category === categoryKey,
-			);
-		}
-
-		// Сортировка (только если сортировка выбрана)
-		if (selectedSort === 'Дате') {
-			result.sort((a, b) => new Date(b.date) - new Date(a.date)); // от новых к старым
-		} else if (selectedSort === 'Сумме') {
-			result.sort((a, b) => b.sum - a.sum); // от больших к маленьким
-		}
-
-		return result;
+	// Функция для проверки активной категории в фильтре
+	const isCategoryActive = (categoryName) => {
+		const categoryKey = REVERSE_CATEGORY_NAMES[categoryName];
+		return filters.filterBy && filters.filterBy.includes(categoryKey);
 	};
 
-	const displayTransactions = filteredAndSortedTransactions();
+	// Функция для проверки активной сортировки
+	const isSortActive = (sortType) => {
+		const sortMapping = {
+			Дате: 'date',
+			Сумме: 'sum',
+		};
+
+		return filters.sortBy === sortMapping[sortType];
+	};
+
+	const displayTransactions = Array.isArray(transactions) ? transactions : [];
 
 	return (
 		<div>
@@ -149,7 +182,7 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 					<S.HeaderContainer>
 						<S.Title>Таблица расходов</S.Title>
 						<S.ItemsContainer>
-							<S.FilterSection $marginleft="100px">
+							<S.FilterSection>
 								<S.FilterText>Фильтровать по категории</S.FilterText>
 								<S.FilterButton onClick={toggleCategory}>
 									<S.FilterValue>{getCategoryButtonText()}</S.FilterValue>
@@ -158,8 +191,9 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 								{isCategoryOpen && (
 									<FilterCategory
 										onClose={closeAllModals}
-										selectedCategory={selectedCategory}
+										selectedCategories={filters.filterBy || []}
 										onCategorySelect={handleCategorySelect}
+										isCategoryActive={isCategoryActive}
 									/>
 								)}
 							</S.FilterSection>
@@ -174,8 +208,9 @@ export const ExpenseTable = ({ transactions, onEdit, onTransactionUpdate }) => {
 								{isFilterOpen && (
 									<Filter
 										onClose={closeAllModals}
-										selectedSort={selectedSort}
+										selectedSort={filters.sortBy}
 										onSortSelect={handleSortSelect}
+										isSortActive={isSortActive}
 									/>
 								)}
 							</S.FilterSection>

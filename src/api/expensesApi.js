@@ -3,7 +3,7 @@ import { getToken } from './authApi';
 
 const BASE_URL = 'https://wedev-api.sky.pro/api';
 
-export const getTransactions = async () => {
+export const getTransactions = async (filters = {}) => {
 	try {
 		const token = getToken();
 
@@ -11,7 +11,28 @@ export const getTransactions = async () => {
 			throw new Error('Токен авторизации не найден');
 		}
 
-		const response = await axios.get(`${BASE_URL}/transactions`, {
+		// Создаем параметры запроса
+		const params = new URLSearchParams();
+
+		// Добавляем параметр сортировки
+		if (filters.sortBy) {
+			params.append('sortBy', filters.sortBy);
+		}
+
+		// Добавляем параметр фильтрации по категориям
+		if (filters.filterBy && filters.filterBy.length > 0) {
+			params.append('filterBy', filters.filterBy.join(','));
+		}
+
+		const url = `${BASE_URL}/transactions${params.toString() ? `?${params.toString()}` : ''}`;
+
+		console.log('Запрос транзакций с параметрами:', {
+			sortBy: filters.sortBy,
+			filterBy: filters.filterBy,
+			fullUrl: url,
+		});
+
+		const response = await axios.get(url, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},

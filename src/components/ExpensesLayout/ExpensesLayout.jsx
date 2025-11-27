@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ExpenseTable } from '../ExpenseTable/ExpenseTable';
 import { NewExpense } from '../NewExpense/NewExpense';
 import { getTransactions } from '../../api/expensesApi';
@@ -11,17 +11,30 @@ export const ExpensesLayout = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	// Загрузка транзакций при монтировании компонента
-	useEffect(() => {
-		fetchTransactions();
-	}, []);
+	// Состояния для фильтров
+	const [filters, setFilters] = useState({
+		sortBy: null,
+		filterBy: [],
+	});
 
-	const fetchTransactions = async () => {
+	// Используем useCallback для стабильной ссылки на функцию
+	const fetchTransactions = useCallback(async () => {
 		try {
 			setLoading(true);
 			setError(null);
-			const data = await getTransactions();
-			// Убедимся что data - массив
+
+			// Подготавливаем параметры для API
+			const apiFilters = {};
+
+			if (filters.sortBy) {
+				apiFilters.sortBy = filters.sortBy;
+			}
+
+			if (filters.filterBy && filters.filterBy.length > 0) {
+				apiFilters.filterBy = filters.filterBy;
+			}
+
+			const data = await getTransactions(apiFilters);
 			setTransactions(Array.isArray(data) ? data : []);
 		} catch (err) {
 			console.error('Ошибка загрузки транзакций:', err);
@@ -30,8 +43,14 @@ export const ExpensesLayout = () => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [filters]); // Добавляем filters в зависимости
 
+	// Загрузка транзакций при монтировании компонента и при изменении фильтров
+	useEffect(() => {
+		fetchTransactions();
+	}, [fetchTransactions]); // Теперь fetchTransactions стабильная
+
+	// Остальной код без изменений...
 	const handleEdit = (expense) => {
 		setIsEditing(true);
 		setEditingExpense(expense);
@@ -67,6 +86,11 @@ export const ExpensesLayout = () => {
 		}
 	};
 
+	// Обработчик изменения фильтров
+	const handleFiltersChange = (newFilters) => {
+		setFilters(newFilters);
+	};
+
 	if (loading) {
 		return (
 			<div>
@@ -93,6 +117,8 @@ export const ExpensesLayout = () => {
 					transactions={transactions}
 					onEdit={handleEdit}
 					onTransactionUpdate={handleTransactionUpdate}
+					filters={filters}
+					onFiltersChange={handleFiltersChange}
 				/>
 				<NewExpense
 					isEditing={isEditing}
