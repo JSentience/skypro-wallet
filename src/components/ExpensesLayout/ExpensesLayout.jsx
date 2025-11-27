@@ -36,57 +36,34 @@ export const ExpensesLayout = () => {
 
 			const data = await getTransactions(apiFilters);
 			setTransactions(Array.isArray(data) ? data : []);
-		} catch (err) {
-			console.error('Ошибка загрузки транзакций:', err);
+		} catch {
 			setError('Не удалось загрузить транзакции');
 			setTransactions([]);
 		} finally {
 			setLoading(false);
 		}
-	}, [filters]); // Добавляем filters в зависимости
+	}, [filters]);
 
-	// Загрузка транзакций при монтировании компонента и при изменении фильтров
 	useEffect(() => {
 		fetchTransactions();
-	}, [fetchTransactions]); // Теперь fetchTransactions стабильная
+	}, [fetchTransactions]);
 
-	// Остальной код без изменений...
 	const handleEdit = (expense) => {
 		setIsEditing(true);
 		setEditingExpense(expense);
 	};
 
-	const handleSave = async (responseData) => {
-		try {
-			console.log('Ответ от API при сохранении:', responseData);
+	const handleSave = async () => {
+		await fetchTransactions();
 
-			// Всегда перезагружаем список транзакций после сохранения
-			await fetchTransactions();
-
-			setIsEditing(false);
-			setEditingExpense(null);
-		} catch (err) {
-			console.error('Ошибка при обновлении списка:', err);
-		}
-	};
-
-	const handleCancel = () => {
 		setIsEditing(false);
 		setEditingExpense(null);
 	};
 
-	const handleTransactionUpdate = async (responseData) => {
-		try {
-			console.log('Данные от API при удалении:', responseData);
-
-			// Всегда перезагружаем список транзакций после удаления
-			await fetchTransactions();
-		} catch (err) {
-			console.error('Ошибка при обновлении списка после удаления:', err);
-		}
+	const handleTransactionUpdate = async () => {
+		await fetchTransactions();
 	};
 
-	// Обработчик изменения фильтров
 	const handleFiltersChange = (newFilters) => {
 		setFilters(newFilters);
 	};
@@ -124,7 +101,6 @@ export const ExpensesLayout = () => {
 					isEditing={isEditing}
 					editingExpense={editingExpense}
 					onSave={handleSave}
-					onCancel={handleCancel}
 				/>
 			</S.MainContent>
 		</div>

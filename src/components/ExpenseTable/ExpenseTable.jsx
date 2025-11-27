@@ -58,7 +58,6 @@ export const ExpenseTable = ({
 		const categoryKey = REVERSE_CATEGORY_NAMES[categoryName];
 		let newFilterBy = [];
 
-		// Если категория уже выбрана - убираем ее, иначе добавляем
 		if (filters.filterBy && filters.filterBy.includes(categoryKey)) {
 			newFilterBy = filters.filterBy.filter((cat) => cat !== categoryKey);
 		} else {
@@ -110,14 +109,13 @@ export const ExpenseTable = ({
 				onTransactionUpdate(updatedTransactions);
 			}
 		} catch (error) {
-			console.error('Ошибка при удалении:', error);
 			alert('Не удалось удалить транзакцию: ' + error.message);
 		} finally {
 			setDeletingId(null);
 		}
 	};
 
-	// Функция для получения русского названия категории
+	//  Функция для получения русского названия категории
 	const getCategoryName = (category) => {
 		return CATEGORY_NAMES[category] || category;
 	};

@@ -26,12 +26,6 @@ export const getTransactions = async (filters = {}) => {
 
 		const url = `${BASE_URL}/transactions${params.toString() ? `?${params.toString()}` : ''}`;
 
-		console.log('Запрос транзакций с параметрами:', {
-			sortBy: filters.sortBy,
-			filterBy: filters.filterBy,
-			fullUrl: url,
-		});
-
 		const response = await axios.get(url, {
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -53,9 +47,6 @@ export const createTransaction = async (transactionData) => {
 			throw new Error('Токен авторизации не найден');
 		}
 
-		console.log('Создание транзакции с данными:', transactionData);
-
-		// Отправляем как простой объект - axios автоматически преобразует в JSON
 		const response = await axios.post(
 			`${BASE_URL}/transactions`,
 			transactionData,
@@ -67,10 +58,8 @@ export const createTransaction = async (transactionData) => {
 			},
 		);
 
-		console.log('Транзакция успешно создана, статус:', response.status);
 		return response.data;
 	} catch (error) {
-		console.error('Ошибка при создании транзакции:', error);
 		throw new Error(error.response?.data?.message || error.message);
 	}
 };
@@ -87,9 +76,6 @@ export const updateTransaction = async (transactionId, transactionData) => {
 			throw new Error('ID транзакции обязателен');
 		}
 
-		console.log('Обновление транзакции с ID:', transactionId);
-		console.log('Новые данные:', transactionData);
-
 		const response = await axios.patch(
 			`${BASE_URL}/transactions/${transactionId}`,
 			transactionData,
@@ -101,10 +87,8 @@ export const updateTransaction = async (transactionId, transactionData) => {
 			},
 		);
 
-		console.log('Транзакция успешно обновлена, статус:', response.status);
 		return response.data;
 	} catch (error) {
-		console.error('Ошибка при обновлении транзакции:', error);
 		throw new Error(error.response?.data?.message || error.message);
 	}
 };
@@ -121,8 +105,6 @@ export const deleteTransaction = async (transactionId) => {
 			throw new Error('ID транзакции обязателен');
 		}
 
-		console.log('Удаление транзакции с ID:', transactionId);
-
 		const response = await axios.delete(
 			`${BASE_URL}/transactions/${transactionId}`,
 			{
@@ -133,10 +115,8 @@ export const deleteTransaction = async (transactionId) => {
 			},
 		);
 
-		console.log('Транзакция успешно удалена, статус:', response.status);
 		return response.data;
 	} catch (error) {
-		console.error('Ошибка при удалении транзакции:', error);
 		throw new Error(error.response?.data?.message || error.message);
 	}
 };

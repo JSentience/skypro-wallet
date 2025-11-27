@@ -310,8 +310,6 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 				date: serverDate,
 			};
 
-			console.log('Отправка данных на сервер:', transactionData);
-
 			let updatedTransactions;
 
 			if (isEditing && editingExpense) {
@@ -347,7 +345,6 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 				});
 			}
 		} catch (err) {
-			console.error('Ошибка при сохранении:', err);
 			setError(err.message);
 		} finally {
 			setLoading(false);
