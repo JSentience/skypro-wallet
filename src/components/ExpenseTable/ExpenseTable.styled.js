@@ -167,3 +167,42 @@ export const ActionIcon = styled.img`
 	margin-right: ${(props) => props.$marginright || '0px'};
 	cursor: pointer;
 `;
+export const LoadingText = styled.div`
+	text-align: center;
+	padding: 40px;
+	font-size: 16px;
+	color: #666;
+`;
+
+export const ErrorText = styled.div`
+	text-align: center;
+	padding: 20px;
+	color: #ff4444;
+	font-size: 16px;
+`;
+
+export const RetryButton = styled.button`
+	background: #007bff;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin: 10px auto;
+	display: block;
+
+	&:hover {
+		background: #0056b3;
+	}
+`;
+
+export const EmptyState = styled.div`
+	text-align: center;
+	padding: 40px;
+`;
+
+export const EmptyText = styled.p`
+	color: #666;
+	font-size: 16px;
+	margin: 0;
+`;

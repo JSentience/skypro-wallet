@@ -7,6 +7,6 @@ export const Container = styled.div`
 	height: 100vh;
 	max-width: 1440px;
 	margin: 0 auto;
-	align-items: center;
+	/* align-items: center; */
 	justify-content: center;
 `;

@@ -29,11 +29,21 @@ export const CategoryItem = styled.div`
 	background-color: ${(props) => (props.$active ? '#dbffe9' : '#f3f4f6')};
 	padding: 8px 20px;
 	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: ${(props) => (props.$active ? '#dbffe9' : '#e8f5ee')};
+	}
 `;
 
 export const CategoryIcon = styled.img`
 	width: 14px;
 	height: 14px;
+	filter: ${(props) =>
+		props.$active
+			? 'invert(48%) sepia(79%) saturate(384%) hue-rotate(106deg) brightness(94%) contrast(89%)'
+			: 'none'};
+	transition: filter 0.2s ease;
 `;
 
 export const CategoryText = styled.p`
@@ -44,4 +54,5 @@ export const CategoryText = styled.p`
 	line-height: 15px;
 	text-align: center;
 	margin-left: 12px;
+	transition: color 0.2s ease;
 `;
