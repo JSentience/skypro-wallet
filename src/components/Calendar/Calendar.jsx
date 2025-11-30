@@ -161,19 +161,20 @@ const MonthView = ({ selection, onSelectionChange }) => {
 
 					const year = targetDate.getFullYear();
 					const month = targetDate.getMonth();
+
+					// Создаем уникальный ключ с offset
+					const uniqueKey = `month-${monthOffset}-${year}-${month}`;
 					const monthData = generateMonthData(year, month);
 
 					return (
-						<S.Month key={`${year}-${month}`}>
+						<S.Month key={uniqueKey}>
 							<S.MonthTitle>
 								{MONTHS[month]} {year}
 							</S.MonthTitle>
 							<S.Days>
 								{monthData.map((dayData, index) => {
 									if (dayData.isEmpty) {
-										return (
-											<S.EmptyDay key={`empty-${year}-${month}-${index}`} />
-										);
+										return <S.EmptyDay key={`${uniqueKey}-empty-${index}`} />;
 									}
 
 									const isSelected =
@@ -187,7 +188,7 @@ const MonthView = ({ selection, onSelectionChange }) => {
 
 									return (
 										<DayComponent
-											key={`${year}-${month}-${dayData.day}`}
+											key={`${uniqueKey}-day-${dayData.day}`}
 											onClick={() => handleDateClick(dayData.date)}
 										>
 											{dayData.day}
@@ -207,9 +208,9 @@ const YearView = ({ selection, onSelectionChange }) => {
 	const [visibleYears, setVisibleYears] = useState([-1, 0, 1, 2]);
 	const currentDate = new Date();
 
-	const handleMonthClick = (year, month) => {
-		const monthStart = new Date(year, month, 1);
-		const monthEnd = new Date(year, month + 1, 0);
+	const handleMonthClick = (year, monthIndex) => {
+		const monthStart = new Date(year, monthIndex, 1);
+		const monthEnd = new Date(year, monthIndex + 1, 0);
 
 		if (!selection.start || (selection.start && selection.end)) {
 			onSelectionChange({ start: monthStart, end: null });
@@ -255,8 +256,11 @@ const YearView = ({ selection, onSelectionChange }) => {
 			{visibleYears.map((yearOffset) => {
 				const year = currentDate.getFullYear() + yearOffset;
 
+				// Создаем уникальный ключ с offset
+				const uniqueKey = `year-${yearOffset}-${year}`;
+
 				return (
-					<S.Year key={year}>
+					<S.Year key={uniqueKey}>
 						<S.YearNumber>{year}</S.YearNumber>
 						<S.YearMonths>
 							{MONTHS.map((month, monthIndex) => {
@@ -275,7 +279,7 @@ const YearView = ({ selection, onSelectionChange }) => {
 
 								return (
 									<MonthComponent
-										key={`${year}-${month}`}
+										key={`${uniqueKey}-${monthIndex}`}
 										onClick={() => handleMonthClick(year, monthIndex)}
 									>
 										{month}
