@@ -5,47 +5,55 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useMediaQuery } from 'react-responsive';
 import { breakpoints } from '../../breakpoints';
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 export const Header = () => {
 	const { isAuthenticated, logout, user } = useAuth();
 	const location = useLocation();
-	const isAuthPage =
-		location.pathname === '/signin' || location.pathname === '/signup';
-	const showLinks = !isAuthPage && isAuthenticated;
-	const pathname = location?.pathname || '';
 	const navigate = useNavigate();
 	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-	const handleClickMain = () => {
+	const isAuthPage = useMemo(
+		() => location.pathname === '/signin' || location.pathname === '/signup',
+		[location.pathname],
+	);
+	const showLinks = !isAuthPage && isAuthenticated;
+	const pathname = location?.pathname || '';
+
+	const handleClickMain = useCallback(() => {
 		navigate('/expenses');
-	};
-	const handleClickLogout = () => {
+	}, [navigate]);
+
+	const handleClickLogout = useCallback(() => {
 		logout();
 		navigate('/signin');
 		setIsMenuOpen(false);
-	};
+	}, [logout, navigate]);
 
-	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
-	};
+	const toggleMenu = useCallback(() => {
+		setIsMenuOpen((prev) => !prev);
+	}, []);
 
-	const handleNavigate = (path) => {
-		navigate(path);
-		setIsMenuOpen(false);
-	};
-	const isExpensesPath = pathname === '/' || pathname.startsWith('/expenses');
+	const handleNavigate = useCallback(
+		(path) => {
+			navigate(path);
+			setIsMenuOpen(false);
+		},
+		[navigate],
+	);
 
-	const getCurrentPageName = () => {
-		if (pathname === '/' || pathname.startsWith('/expenses'))
-			return 'Мои расходы';
+	const isExpensesPath = useMemo(
+		() => pathname === '/' || pathname.startsWith('/expenses'),
+		[pathname],
+	);
+
+	const currentPageName = useMemo(() => {
+		if (pathname === '/' || pathname.startsWith('/expenses')) return 'Мои расходы';
 		if (pathname.startsWith('/analysis')) return 'Анализ расходов';
 		if (pathname.startsWith('/new-expense')) return 'Новый расход';
 		return 'Мои расходы';
-	};
-
-	const currentPageName = getCurrentPageName();
+	}, [pathname]);
 	return (
 		<S.HeaderStyled>
 			<S.HeaderWrapper $isMobile={isMobile}>

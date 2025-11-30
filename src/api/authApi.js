@@ -1,6 +1,21 @@
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 
-const AUTH_URL = 'https://wedev-api.sky.pro/api/user';
+const AUTH_URL = '/api/user';
+
+// Настройка retry для axios
+axiosRetry(axios, {
+	retries: 3,
+	retryDelay: (retryCount) => {
+		console.warn(`Повторная попытка запроса #${retryCount}`);
+		return retryCount * 1000; // Увеличивающаяся задержка
+	},
+	retryCondition: (error) => {
+		// Повторять при сетевых ошибках или 5xx статусах
+		return axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+			   (error.response && error.response.status >= 500);
+	},
+});
 
 export const getToken = () => localStorage.getItem('walletToken');
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ExpenseTable } from '../ExpenseTable/ExpenseTable';
 import { NewExpense } from '../NewExpense/NewExpense';
 import { getTransactions } from '../../api/expensesApi';
@@ -17,22 +17,23 @@ export const ExpensesLayout = () => {
 		filterBy: [],
 	});
 
+	// Мемоизация параметров для API
+	const apiFilters = useMemo(() => {
+		const result = {};
+		if (filters.sortBy) {
+			result.sortBy = filters.sortBy;
+		}
+		if (filters.filterBy && filters.filterBy.length > 0) {
+			result.filterBy = filters.filterBy;
+		}
+		return result;
+	}, [filters.sortBy, filters.filterBy]);
+
 	// Используем useCallback для стабильной ссылки на функцию
 	const fetchTransactions = useCallback(async () => {
 		try {
 			setLoading(true);
 			setError(null);
-
-			// Подготавливаем параметры для API
-			const apiFilters = {};
-
-			if (filters.sortBy) {
-				apiFilters.sortBy = filters.sortBy;
-			}
-
-			if (filters.filterBy && filters.filterBy.length > 0) {
-				apiFilters.filterBy = filters.filterBy;
-			}
 
 			const data = await getTransactions(apiFilters);
 			setTransactions(Array.isArray(data) ? data : []);
@@ -42,31 +43,30 @@ export const ExpensesLayout = () => {
 		} finally {
 			setLoading(false);
 		}
-	}, [filters]);
+	}, [apiFilters]);
 
 	useEffect(() => {
 		fetchTransactions();
 	}, [fetchTransactions]);
 
-	const handleEdit = (expense) => {
+	const handleEdit = useCallback((expense) => {
 		setIsEditing(true);
 		setEditingExpense(expense);
-	};
+	}, []);
 
-	const handleSave = async () => {
+	const handleSave = useCallback(async () => {
 		await fetchTransactions();
-
 		setIsEditing(false);
 		setEditingExpense(null);
-	};
+	}, [fetchTransactions]);
 
-	const handleTransactionUpdate = async () => {
+	const handleTransactionUpdate = useCallback(async () => {
 		await fetchTransactions();
-	};
+	}, [fetchTransactions]);
 
-	const handleFiltersChange = (newFilters) => {
+	const handleFiltersChange = useCallback((newFilters) => {
 		setFilters(newFilters);
-	};
+	}, []);
 
 	if (loading) {
 		return (

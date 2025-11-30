@@ -1,4 +1,21 @@
-const API_BASE_URL = 'http://wedev-api.sky.pro/api';
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
+
+const API_BASE_URL = '/api';
+
+// Настройка retry для axios
+axiosRetry(axios, {
+	retries: 3,
+	retryDelay: (retryCount) => {
+		console.warn(`Повторная попытка запроса #${retryCount}`);
+		return retryCount * 1000; // Увеличивающаяся задержка
+	},
+	retryCondition: (error) => {
+		// Повторять при сетевых ошибках или 5xx статусах
+		return axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+			   (error.response && error.response.status >= 500);
+	},
+});
 
 const formatDateForAPI = (date) => {
 	if (!date) return '';
@@ -21,36 +38,25 @@ export const transactionsAPI = {
 				end: formatDateForAPI(endDate),
 			};
 
-			const headers = {
-				'Content-Type': '',
-			};
-
 			const token = authToken || localStorage.getItem('walletToken');
 
+			const config = {
+				headers: {
+					'Content-Type': '',
+				},
+			};
+
 			if (token) {
-				headers['Authorization'] = `Bearer ${token}`;
+				config.headers['Authorization'] = `Bearer ${token}`;
 			}
 
-			const response = await fetch(`${API_BASE_URL}/transactions/period`, {
-				method: 'POST',
-				headers: headers,
-				body: JSON.stringify(requestBody),
-			});
+			const response = await axios.post(`${API_BASE_URL}/transactions/period`, requestBody, config);
 
-			if (!response.ok) {
-				let errorMessage = `HTTP error! status: ${response.status}`;
-				try {
-					const errorData = await response.json();
-					errorMessage = errorData.error || errorData.message || errorMessage;
-				} catch (e) {}
-				throw new Error(errorMessage);
-			}
-
-			const data = await response.json();
-			return data;
+			return response.data;
 		} catch (error) {
 			console.error(error);
-			throw error;
+			const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message || 'Unknown error';
+			throw new Error(errorMessage);
 		}
 	},
 };

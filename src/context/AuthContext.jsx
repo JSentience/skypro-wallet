@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, useMemo } from 'react';
 
 const AuthContext = createContext();
 
@@ -17,6 +17,9 @@ export const AuthProvider = ({ children }) => {
 		}
 		setLoading(false);
 	}, []);
+
+	// Мемоизация user объекта для предотвращения ненужных рендеров
+	const memoizedUser = useMemo(() => user, [user]);
 
 	const login = (userData) => {
 		const { token, name, login } = userData;
@@ -37,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
 	return (
 		<AuthContext.Provider
-			value={{ user, isAuthenticated, loading, login, logout }}
+			value={{ user: memoizedUser, isAuthenticated, loading, login, logout }}
 		>
 			{children}
 		</AuthContext.Provider>

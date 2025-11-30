@@ -1,8 +1,28 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import * as S from './ExpenseTable.styled';
 import { FilterCategory } from './FilterCategory';
 import { Filter } from './Filter';
 import { deleteTransaction } from '../../api/expensesApi';
+
+// Маппинг категорий с английских на русские (вынесено наружу для предотвращения пересоздания)
+const CATEGORY_NAMES = {
+	food: 'Еда',
+	transport: 'Транспорт',
+	housing: 'Жилье',
+	joy: 'Развлечения',
+	education: 'Образование',
+	others: 'Другое',
+};
+
+// Обратный маппинг для фильтрации
+const REVERSE_CATEGORY_NAMES = {
+	Еда: 'food',
+	Транспорт: 'transport',
+	Жилье: 'housing',
+	Развлечения: 'joy',
+	Образование: 'education',
+	Другое: 'others',
+};
 
 export const ExpenseTable = ({
 	transactions,
@@ -15,90 +35,85 @@ export const ExpenseTable = ({
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [deletingId, setDeletingId] = useState(null);
 
-	// Маппинг категорий с английских на русские
-	const CATEGORY_NAMES = {
-		food: 'Еда',
-		transport: 'Транспорт',
-		housing: 'Жилье',
-		joy: 'Развлечения',
-		education: 'Образование',
-		others: 'Другое',
-	};
+	const toggleCategory = useCallback(() => {
+		setIsCategoryOpen((prev) => {
+			const newState = !prev;
+			if (!newState && isFilterOpen) {
+				setIsFilterOpen(false);
+			}
+			return newState;
+		});
+	}, [isFilterOpen]);
 
-	// Обратный маппинг для фильтрации
-	const REVERSE_CATEGORY_NAMES = {
-		Еда: 'food',
-		Транспорт: 'transport',
-		Жилье: 'housing',
-		Развлечения: 'joy',
-		Образование: 'education',
-		Другое: 'others',
-	};
+	const toggleFilter = useCallback(() => {
+		setIsFilterOpen((prev) => {
+			const newState = !prev;
+			if (!newState && isCategoryOpen) {
+				setIsCategoryOpen(false);
+			}
+			return newState;
+		});
+	}, [isCategoryOpen]);
 
-	const toggleCategory = () => {
-		setIsCategoryOpen(!isCategoryOpen);
-		if (!isCategoryOpen && isFilterOpen) {
-			setIsFilterOpen(false);
-		}
-	};
+	const closeAllModals = useCallback(() => {
+		setIsCategoryOpen(false);
+		setIsFilterOpen(false);
+	}, []);
 
-	const toggleFilter = () => {
-		setIsFilterOpen(!isFilterOpen);
-		if (!isFilterOpen && isCategoryOpen) {
+	const handleCategorySelect = useCallback(
+		(categoryName) => {
+			const categoryKey = REVERSE_CATEGORY_NAMES[categoryName];
+			let newFilterBy = [];
+
+			if (filters.filterBy && filters.filterBy.includes(categoryKey)) {
+				newFilterBy = filters.filterBy.filter((cat) => cat !== categoryKey);
+			} else {
+				newFilterBy = [...(filters.filterBy || []), categoryKey];
+			}
+
+			onFiltersChange({
+				...filters,
+				filterBy: newFilterBy,
+			});
 			setIsCategoryOpen(false);
-		}
-	};
+		},
+		[filters, onFiltersChange],
+	);
 
-	const closeAllModals = () => {
-		setIsCategoryOpen(false);
-		setIsFilterOpen(false);
-	};
+	const handleSortSelect = useCallback(
+		(sortType) => {
+			let newSortBy = null;
 
-	const handleCategorySelect = (categoryName) => {
-		const categoryKey = REVERSE_CATEGORY_NAMES[categoryName];
-		let newFilterBy = [];
+			// Маппинг русских названий на английские для API
+			const sortMapping = {
+				Дате: 'date',
+				Сумме: 'sum',
+			};
 
-		if (filters.filterBy && filters.filterBy.includes(categoryKey)) {
-			newFilterBy = filters.filterBy.filter((cat) => cat !== categoryKey);
-		} else {
-			newFilterBy = [...(filters.filterBy || []), categoryKey];
-		}
+			const sortKey = sortMapping[sortType];
 
-		onFiltersChange({
-			...filters,
-			filterBy: newFilterBy,
-		});
-		setIsCategoryOpen(false);
-	};
+			// Если сортировка уже выбрана - снимаем, иначе устанавливаем
+			if (filters.sortBy === sortKey) {
+				newSortBy = null;
+			} else {
+				newSortBy = sortKey;
+			}
 
-	const handleSortSelect = (sortType) => {
-		let newSortBy = null;
+			onFiltersChange({
+				...filters,
+				sortBy: newSortBy,
+			});
+			setIsFilterOpen(false);
+		},
+		[filters, onFiltersChange],
+	);
 
-		// Маппинг русских названий на английские для API
-		const sortMapping = {
-			Дате: 'date',
-			Сумме: 'sum',
-		};
-
-		const sortKey = sortMapping[sortType];
-
-		// Если сортировка уже выбрана - снимаем, иначе устанавливаем
-		if (filters.sortBy === sortKey) {
-			newSortBy = null;
-		} else {
-			newSortBy = sortKey;
-		}
-
-		onFiltersChange({
-			...filters,
-			sortBy: newSortBy,
-		});
-		setIsFilterOpen(false);
-	};
-
-	const handleEditClick = (transaction) => {
-		onEdit(transaction);
-	};
+	const handleEditClick = useCallback(
+		(transaction) => {
+			onEdit(transaction);
+		},
+		[onEdit],
+	);
 
 	const handleDeleteClick = async (transaction) => {
 		try {
@@ -180,7 +195,10 @@ export const ExpenseTable = ({
 		return filters.sortBy === sortMapping[sortType];
 	};
 
-	const displayTransactions = Array.isArray(transactions) ? transactions : [];
+	const displayTransactions = useMemo(
+		() => (Array.isArray(transactions) ? transactions : []),
+		[transactions],
+	);
 
 	return (
 		<div>

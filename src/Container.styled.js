@@ -6,7 +6,7 @@ export const Container = styled.div`
 	display: flex;
 	height: 100vh;
 	max-width: 1440px;
-	margin: 0 auto;
-	/* align-items: center; */
+	margin: 60px auto;
+	//align-items: center;
 	justify-content: center;
 `;

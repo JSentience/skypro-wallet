@@ -2,7 +2,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { login, register } from '../../api/authApi';
 import { Container } from '../../Container.styled.js';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as S from './Login.styled';
 import { MainButton } from '../Button/Button';
 
@@ -17,15 +17,6 @@ export const Login = () => {
 	const [success, setSuccess] = useState('');
 
 	const isSignIn = location.pathname === '/signin';
-
-	useEffect(() => {
-		const storedData = localStorage.getItem('auth');
-		if (storedData) {
-			const parsed = JSON.parse(storedData);
-			setLoginValue(parsed.userLogin || '');
-			setName(parsed.userName || '');
-		}
-	}, []);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
