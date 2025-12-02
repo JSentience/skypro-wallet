@@ -61,9 +61,11 @@ export const HistogramMainContent = styled.div`
 		gap: 20px;
 	}
 	@media (max-width: 1024px) {
-		gap: 20px;
 		height: 250px;
 		min-height: 250px;
+	}
+	@media (max-width: 1023px) {
+		height: 450px;
 	}
 `;
 

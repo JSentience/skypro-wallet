@@ -28,4 +28,8 @@ export const AnalyticsContent = styled.div`
 		grid-template-columns: repeat(10, 1fr);
 		gap: 20px;
 	}
+	@media (max-width: 1023px) {
+		display: flex;
+		flex-direction: column;
+	}
 `;

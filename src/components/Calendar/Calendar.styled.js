@@ -31,6 +31,10 @@ export const ScrollContainer = styled.div`
 	/* Для Firefox */
 	scrollbar-width: thin;
 	scrollbar-color: rgba(217, 217, 217, 1) transparent;
+
+	@media (max-width: 1023px) {
+		max-height: 375px;
+	}
 `;
 
 export const CalendarBlock = styled.div`
@@ -49,6 +53,9 @@ export const CalendarBlock = styled.div`
 
 	@media (max-width: 1024px) {
 		width: min-content;
+	}
+	@media (max-width: 1023px) {
+		width: auto;
 	}
 `;
 
@@ -135,6 +142,9 @@ export const Days = styled.div`
 	@media (1025px <= width <= 1439px) {
 		gap: 2px;
 	}
+	@media (max-width: 1023px) {
+		gap: 10px;
+	}
 `;
 
 export const Day = styled.div`
@@ -151,14 +161,13 @@ export const Day = styled.div`
 		background: rgba(219, 255, 233, 0.8);
 	}
 
-	@media (1025px <= width <= 1439px) {
+	@media (1023px <= width <= 1439px) {
 		width: 35px;
 		height: 35px;
 	}
-
-	@media (max-width: 1024px) {
-		width: 35px;
-		height: 35px;
+	@media (max-width: 1022px) {
+		width: 50px;
+		height: 50px;
 	}
 `;
 
