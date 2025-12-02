@@ -57,7 +57,9 @@ export const HistogramMainContent = styled.div`
 	justify-content: space-between;
 	align-items: flex-end;
 	min-height: 300px;
-
+	@media (max-width: 1439px) {
+		gap: 20px;
+	}
 	@media (max-width: 1024px) {
 		gap: 20px;
 		height: 250px;
@@ -81,6 +83,9 @@ export const ColumnSumm = styled.p`
 	line-height: 20px;
 	letter-spacing: 0px;
 	text-align: center;
+	@media (1025px <= width <= 1439px) {
+		font-size: 13px;
+	}
 	@media (max-width: 1024px) {
 		font-size: 12px;
 	}

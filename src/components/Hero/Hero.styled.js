@@ -7,6 +7,19 @@ export const MainStyled = styled.main`
 	padding-top: 64px;
 	padding-left: calc(50% - 41%);
 	padding-right: calc(50% - 41%);
+	/* @media (max-width: 1439px) {
+		padding-left: calc(50% - 43%);
+		padding-right: calc(50% - 43%);
+	} */
+
+	/* @media (1024px <= width <= 1440px) {
+		padding-left: calc(50% - 43%);
+		padding-right: calc(50% - 43%);
+	} */
+	@media (1025px <= width <= 1439px) {
+		padding-left: calc(50% - 43%);
+		padding-right: calc(50% - 43%);
+	}
 	@media (max-width: 1024px) {
 		padding-left: calc(50% - 45%);
 		padding-right: calc(50% - 45%);

@@ -43,6 +43,9 @@ export const CalendarBlock = styled.div`
 	background: rgba(255, 255, 255, 1);
 	position: relative;
 	overflow: hidden;
+	@media (1025px <= width <= 1439px) {
+		padding: 25px;
+	}
 
 	@media (max-width: 1024px) {
 		width: min-content;
@@ -129,6 +132,9 @@ export const Days = styled.div`
 	grid-template-columns: repeat(7, 1fr);
 	gap: 6px;
 	width: 100%;
+	@media (1025px <= width <= 1439px) {
+		gap: 2px;
+	}
 `;
 
 export const Day = styled.div`
@@ -143,6 +149,11 @@ export const Day = styled.div`
 
 	&:hover {
 		background: rgba(219, 255, 233, 0.8);
+	}
+
+	@media (1025px <= width <= 1439px) {
+		width: 35px;
+		height: 35px;
 	}
 
 	@media (max-width: 1024px) {

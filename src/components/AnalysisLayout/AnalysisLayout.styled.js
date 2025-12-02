@@ -23,4 +23,9 @@ export const AnalyticsContent = styled.div`
 	display: grid;
 	grid-template-columns: repeat(12, 1fr);
 	gap: 32px;
+	@media (1025px <= width <= 1439px) {
+		display: grid;
+		grid-template-columns: repeat(10, 1fr);
+		gap: 20px;
+	}
 `;
