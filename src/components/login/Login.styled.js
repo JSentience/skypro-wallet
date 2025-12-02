@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
 	width: 100%;
 	background: #f4f5f6;
-	/* height: 870px; */
-	height: 100vh;
+	height: 870px;
+	//height: 100vh;
 `;
 export const LoginContainer = styled.div`
 	display: inline-flex;
@@ -113,4 +113,17 @@ export const ChangeFormLink = styled.a`
 	line-height: 150%; /* 18px */
 	cursor: pointer;
 	text-decoration: underline;
+`;
+
+export const ErrorStyle = styled.div`
+	color: red;
+	display: flex;
+	align-items: center;
+	text-align: center;
+`;
+export const SuccessStyle = styled.div`
+	color: green;
+	display: flex;
+	align-items: center;
+	text-align: center;
 `;

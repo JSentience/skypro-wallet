@@ -10,6 +10,7 @@ export const Container = styled.div`
 	background-color: white;
 	margin-top: 32px;
 	padding: 32px 32px 32px 34px;
+	position: relative;
 `;
 
 export const Content = styled.div`
@@ -53,10 +54,20 @@ export const Input = styled.input`
 	width: 313px;
 	height: 39px;
 	box-sizing: border-box;
-	border: 0.5px solid #1fa46c;
+	border: 0.5px solid
+		${(props) =>
+			props.$error ? '#ff4444' : props.$filled ? '#1fa46c' : '#cccccc'};
 	border-radius: 6px;
-	background-color: #dbffe9;
+	background-color: ${(props) =>
+		props.$error ? '#ffebee' : props.$filled ? '#dbffe9' : '#ffffff'};
 	padding: 12px;
+	transition: all 0.3s ease;
+
+	&:focus {
+		outline: none;
+		border-color: ${(props) => (props.$error ? '#ff4444' : '#1fa46c')};
+		background-color: ${(props) => (props.$error ? '#ffebee' : '#dbffe9')};
+	}
 `;
 
 export const CategorySection = styled.div`
@@ -65,7 +76,6 @@ export const CategorySection = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	gap: 16px;
 `;
 
 export const CategoryGrid = styled.div`
@@ -75,6 +85,7 @@ export const CategoryGrid = styled.div`
 	flex-wrap: wrap;
 	align-items: flex-start;
 	gap: 6px;
+	margin-top: 16px;
 `;
 
 export const CategoryItem = styled.div`
@@ -82,11 +93,22 @@ export const CategoryItem = styled.div`
 	border-radius: 30px;
 	background-color: ${(props) => (props.$active ? '#dbffe9' : '#f3f4f6')};
 	padding: 8px 20px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: ${(props) => (props.$active ? '#dbffe9' : '#e8f5ee')};
+	}
 `;
 
 export const CategoryIcon = styled.img`
 	width: 14px;
 	height: 14px;
+	filter: ${(props) =>
+		props.$active
+			? 'invert(48%) sepia(79%) saturate(384%) hue-rotate(106deg) brightness(94%) contrast(89%)'
+			: 'none'};
+	transition: filter 0.2s ease;
 `;
 
 export const CategoryText = styled.p`
@@ -97,6 +119,7 @@ export const CategoryText = styled.p`
 	line-height: 15px;
 	text-align: center;
 	margin-left: 12px;
+	transition: color 0.2s ease;
 `;
 
 export const Button = styled.button`
@@ -107,6 +130,11 @@ export const Button = styled.button`
 	padding: 12px;
 	border: none;
 	cursor: pointer;
+
+	&:disabled {
+		background-color: #cccccc;
+		cursor: not-allowed;
+	}
 `;
 
 export const ButtonText = styled.div`
@@ -116,4 +144,39 @@ export const ButtonText = styled.div`
 	font-weight: 600;
 	line-height: 15px;
 	text-align: center;
+`;
+
+export const ErrorMessage = styled.div`
+	position: absolute;
+	top: 70px;
+	left: 32px;
+	right: 32px;
+	background: #ffebee;
+	color: #c62828;
+	padding: 12px;
+	border-radius: 4px;
+	border: 1px solid #ffcdd2;
+	z-index: 10;
+`;
+
+export const ButtonContainer = styled.div`
+	display: flex;
+	gap: 12px;
+`;
+
+export const FieldError = styled.div`
+	color: #ff4444;
+	font-size: 12px;
+	margin-top: 4px;
+	font-family: 'Montserrat', sans-serif;
+`;
+
+export const SumInput = styled(Input)`
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	-moz-appearance: textfield;
+	appearance: textfield;
 `;

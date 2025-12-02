@@ -1,31 +1,53 @@
 import { useAuth } from '../../hooks/useAuth';
-import {
-	ChangeForm,
-	ChangeFormLink,
-	ChangeFormText,
-	InputEmail,
-	InputForm,
-	InputName,
-	InputPassword,
-	LoginContainer,
-	LoginTitle,
-	LoginWrapper,
-	Wrapper,
-} from './Login.styled';
+import { login, register } from '../../api/authApi';
 import { Container } from '../../Container.styled.js';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import * as S from './Login.styled';
 import { MainButton } from '../Button/Button';
 
 export const Login = () => {
-	const { setAuth } = useAuth();
+	const { login: authLogin } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [loginValue, setLoginValue] = useState('');
+	const [password, setPassword] = useState('');
+	const [name, setName] = useState('');
+	const [error, setError] = useState('');
+	const [success, setSuccess] = useState('');
 
 	const isSignIn = location.pathname === '/signin';
 
-	const handleLogin = () => {
-		setAuth(true);
-		navigate('/expenses');
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setError('');
+		setSuccess('');
+		const trimmedLogin = loginValue.trim();
+		const trimmedPassword = password.trim();
+		if (!trimmedLogin || !trimmedPassword) {
+			setError('Поле не может быть пустым или содержать только пробелы');
+			return;
+		}
+		try {
+			let response;
+			if (isSignIn) {
+				response = await login(trimmedLogin, trimmedPassword);
+			} else {
+				const trimmedName = name.trim();
+				if (!trimmedName) {
+					setError('Имя не может быть пустым');
+					return;
+				}
+				response = await register(trimmedName, trimmedLogin, trimmedPassword);
+			}
+			authLogin(response.user);
+			setSuccess(
+				isSignIn ? 'Вход выполнен успешно!' : 'Регистрация выполнена успешно!',
+			);
+			navigate('/');
+		} catch (err) {
+			setError(err.message);
+		}
 	};
 
 	const handleSwitchForm = () => {
@@ -34,31 +56,50 @@ export const Login = () => {
 
 	return (
 		<>
-			<Wrapper>
+			<S.Wrapper>
 				<Container>
-					<LoginContainer>
-						<LoginWrapper>
-							<LoginTitle>{isSignIn ? 'Вход' : 'Регистрация'}</LoginTitle>
-							<InputForm>
-								{!isSignIn && <InputName type="text" placeholder="Имя" />}
-								<InputEmail type="text" placeholder="Почта" />
-								<InputPassword type="password" placeholder="Пароль" />
-							</InputForm>
-							<MainButton onClick={handleLogin}>
+					<S.LoginContainer>
+						<S.LoginWrapper>
+							<S.LoginTitle>{isSignIn ? 'Вход' : 'Регистрация'}</S.LoginTitle>
+							{error && <S.ErrorStyle>{error}</S.ErrorStyle>}
+							{success && <S.SuccessStyle>{success}</S.SuccessStyle>}
+							<S.InputForm>
+								{!isSignIn && (
+									<S.InputName
+										type="text"
+										placeholder="Имя"
+										value={name}
+										onChange={(e) => setName(e.target.value)}
+									/>
+								)}
+								<S.InputEmail
+									type="text"
+									placeholder="Почта"
+									value={loginValue}
+									onChange={(e) => setLoginValue(e.target.value)}
+								/>
+								<S.InputPassword
+									type="password"
+									placeholder="Пароль"
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+								/>
+							</S.InputForm>
+							<MainButton type="submit" onClick={handleSubmit}>
 								{isSignIn ? 'Войти' : 'Зарегистрироваться'}
 							</MainButton>
-							<ChangeForm>
-								<ChangeFormText>
+							<S.ChangeForm>
+								<S.ChangeFormText>
 									{isSignIn ? 'Нужно зарегистрироваться?' : 'Уже есть аккаунт?'}
-								</ChangeFormText>
-								<ChangeFormLink onClick={handleSwitchForm}>
+								</S.ChangeFormText>
+								<S.ChangeFormLink onClick={handleSwitchForm}>
 									{isSignIn ? 'Регистрируйтесь здесь' : 'Войдите здесь'}
-								</ChangeFormLink>
-							</ChangeForm>
-						</LoginWrapper>
-					</LoginContainer>
+								</S.ChangeFormLink>
+							</S.ChangeForm>
+						</S.LoginWrapper>
+					</S.LoginContainer>
 				</Container>
-			</Wrapper>
+			</S.Wrapper>
 		</>
 	);
 };

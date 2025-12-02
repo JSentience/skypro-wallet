@@ -9,6 +9,9 @@ export const AnalyticsTitle = styled.h2`
 	text-align: left;
 	padding-top: 36px;
 	margin-bottom: 32px;
+	@media (max-width: 1024px) {
+		font-size: 30px;
+	}
 `;
 export const AnalyticsWrapper = styled.div`
 	max-width: 1200px;

@@ -29,6 +29,11 @@ export const FilterItem = styled.div`
 	background-color: ${(props) => (props.$active ? '#dbffe9' : '#f3f4f6')};
 	padding: 8px 20px;
 	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: ${(props) => (props.$active ? '#dbffe9' : '#e8f5ee')};
+	}
 `;
 
 export const FilterText = styled.p`
@@ -38,4 +43,5 @@ export const FilterText = styled.p`
 	font-weight: 400;
 	line-height: 15px;
 	text-align: center;
+	transition: color 0.2s ease;
 `;

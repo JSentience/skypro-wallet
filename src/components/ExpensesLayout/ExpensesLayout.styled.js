@@ -22,3 +22,17 @@ export const MainContent = styled.main`
 	align-items: center;
 	gap: 34px;
 `;
+
+export const LoadingText = styled.div`
+	text-align: center;
+	padding: 40px;
+	font-size: 16px;
+	color: #666;
+`;
+
+export const ErrorText = styled.div`
+	text-align: center;
+	padding: 20px;
+	color: #ff4444;
+	font-size: 16px;
+`;

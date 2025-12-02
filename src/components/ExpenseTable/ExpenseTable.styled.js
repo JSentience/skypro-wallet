@@ -6,7 +6,7 @@ export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	border-radius: 30px;
-	box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
+	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background-color: white;
 	margin-top: 32px;
 `;
@@ -38,8 +38,8 @@ export const FilterSection = styled.div`
 	display: flex;
 	align-items: baseline;
 	position: relative;
-	margin-left: ${(props) => props.marginleft || '0px'};
-	margin-right: ${(props) => props.marginright || '0px'};
+	margin-left: ${(props) => props.$marginleft || '0px'};
+	margin-right: ${(props) => props.$marginright || '0px'};
 `;
 
 export const FilterText = styled.div`
@@ -64,7 +64,7 @@ export const FilterValue = styled.div`
 	line-height: 150%;
 	text-align: center;
 	border-bottom: 0.5px solid #1fa46c;
-	margin-left: ${(props) => props.marginleft || '6.5px'};
+	margin-left: ${(props) => props.$marginleft || '6.5px'};
 `;
 
 export const FilterIcon = styled.img`
@@ -77,7 +77,7 @@ export const TableHeader = styled.div`
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 400;
 	line-height: 150%;
-	letter-spacing: 0px;
+	letter-spacing: 0;
 	width: 723px;
 	height: 15px;
 	display: flex;
@@ -92,7 +92,7 @@ export const HeaderItem = styled.div`
 	font-size: 12px;
 	width: 141px;
 	height: 15px;
-	margin-left: ${(props) => props.marginleft || '0px'};
+	margin-left: ${(props) => props.$marginleft || '0px'};
 `;
 
 export const Divider = styled.div`
@@ -137,7 +137,7 @@ export const TableContent = styled.div`
 export const TableRow = styled.div`
 	font-weight: 400;
 	line-height: 150%;
-	letter-spacing: 0px;
+	letter-spacing: 0;
 	width: 723px;
 	height: 15px;
 	display: flex;
@@ -151,7 +151,7 @@ export const RowItem = styled.div`
 	font-size: 12px;
 	width: 141px;
 	height: 15px;
-	margin-left: ${(props) => props.marginleft || '0px'};
+	margin-left: ${(props) => props.$marginleft || '0px'};
 `;
 
 export const ActionsContainer = styled.div`
@@ -164,6 +164,45 @@ export const ActionsContainer = styled.div`
 export const ActionIcon = styled.img`
 	width: 12px;
 	height: 12px;
-	margin-right: ${(props) => props.marginright || '0px'};
+	margin-right: ${(props) => props.$marginright || '0px'};
 	cursor: pointer;
+`;
+export const LoadingText = styled.div`
+	text-align: center;
+	padding: 40px;
+	font-size: 16px;
+	color: #666;
+`;
+
+export const ErrorText = styled.div`
+	text-align: center;
+	padding: 20px;
+	color: #ff4444;
+	font-size: 16px;
+`;
+
+export const RetryButton = styled.button`
+	background: #007bff;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin: 10px auto;
+	display: block;
+
+	&:hover {
+		background: #0056b3;
+	}
+`;
+
+export const EmptyState = styled.div`
+	text-align: center;
+	padding: 40px;
+`;
+
+export const EmptyText = styled.p`
+	color: #666;
+	font-size: 16px;
+	margin: 0;
 `;
