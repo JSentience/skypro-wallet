@@ -1,5 +1,5 @@
 import * as S from './Calendar.styled';
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 
 const DAYS_OF_WEEK = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
 const MONTHS = [
