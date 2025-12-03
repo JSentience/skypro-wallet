@@ -57,6 +57,12 @@ export const CalendarBlock = styled.div`
 	@media (max-width: 1023px) {
 		width: auto;
 	}
+	@media (max-width: 549px) {
+		width: 100% !important;
+		padding: 20px;
+		margin: 0 auto;
+		grid-column: unset;
+	}
 `;
 
 export const CalendarNav = styled.div`
@@ -145,6 +151,9 @@ export const Days = styled.div`
 	@media (max-width: 1023px) {
 		gap: 10px;
 	}
+	@media (max-width: 549px) {
+		gap: 6px;
+	}
 `;
 
 export const Day = styled.div`
@@ -168,6 +177,10 @@ export const Day = styled.div`
 	@media (max-width: 1022px) {
 		width: 50px;
 		height: 50px;
+	}
+	@media (max-width: 549px) {
+		width: 35px;
+		height: 35px;
 	}
 `;
 
