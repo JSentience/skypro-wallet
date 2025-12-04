@@ -9,11 +9,21 @@ export const HistogramBlock = styled.div`
 	background: rgba(255, 255, 255, 1);
 	padding: 32px 32px 32px 32px;
 	gap: 21px;
+
 	@media (max-width: 549px) {
 		grid-column-start: unset;
 		grid-column-end: unset;
 		width: 100%;
-		padding: 20px;
+		border-radius: 0;
+		box-shadow: none;
+		background: none;
+		padding: 20px 0 0 0;
+		margin: 0;
+		gap: 0;
+		height: auto;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
 	}
 `;
 
@@ -80,7 +90,6 @@ export const HistogramMainContent = styled.div`
 	}
 `;
 
-// И добавляем обертку для контейнера колонок
 export const ColumnAndExpenses = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -88,7 +97,7 @@ export const ColumnAndExpenses = styled.div`
 	justify-content: flex-end;
 	align-items: center;
 	height: 100%;
-	width: 100%; /* Важно для ограничения ширины дочерних элементов */
+	width: 100%;
 
 	@media (max-width: 549px) {
 		gap: 6px;
@@ -110,7 +119,6 @@ export const ColumnSumm = styled.p`
 	}
 `;
 
-// Обновляем ширину колонок для мобилки
 export const ColumnGraphicksFood = styled.div`
 	width: clamp(20px, 5vw, 94px);
 	border-radius: 12px;
@@ -120,7 +128,7 @@ export const ColumnGraphicksFood = styled.div`
 	min-height: 20px;
 
 	@media (max-width: 549px) {
-		width: 52px; /* Фиксированная ширина как в макете */
+		width: 52px;
 		min-width: 52px;
 		max-width: 52px;
 		border-radius: 6px;
@@ -185,12 +193,10 @@ export const ColumnTitle = styled.p`
 	}
 
 	@media (max-width: 549px) {
-		/* Для мобилки - точно 52px как в макете */
 		max-width: 52px;
 		font-size: 10px;
 		line-height: 12px;
 
-		/* Уменьшаем padding для лучшего отображения */
 		padding: 0 2px;
 		box-sizing: border-box;
 	}
