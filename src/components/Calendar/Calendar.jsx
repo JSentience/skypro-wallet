@@ -1,5 +1,6 @@
 import * as S from './Calendar.styled';
 import { useRef, useState } from 'react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 const DAYS_OF_WEEK = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
 const MONTHS = [
@@ -46,11 +47,13 @@ const generateMonthData = (year, month) => {
 };
 
 export const Calendar = ({ selectedRange, onSelectionChange }) => {
+	const isMobile = useMediaQuery('(max-width: 480px)');
 	console.log('📅 Calendar props:', {
 		selectedRange: selectedRange,
 		hasStart: !!selectedRange?.start,
 		hasEnd: !!selectedRange?.end,
 		hasOnSelectionChange: !!onSelectionChange,
+		isMobile: isMobile,
 	});
 
 	const [viewMode, setViewMode] = useState('month');
@@ -72,7 +75,9 @@ export const Calendar = ({ selectedRange, onSelectionChange }) => {
 	return (
 		<S.CalendarBlock>
 			<S.CalendarNav>
-				<S.CalendarPeriod>Период</S.CalendarPeriod>
+				<S.CalendarPeriod>
+					{isMobile ? 'Выбор периода' : 'Период'}
+				</S.CalendarPeriod>
 				<S.CalendarYearMonth>
 					<S.CalendarButtons
 						$active={viewMode === 'month'}

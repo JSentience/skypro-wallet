@@ -20,7 +20,7 @@ export const MainStyled = styled.main`
 
 	@media (max-width: 549px) {
 		position: relative;
-		background: linear-gradient(to bottom, white, rgba(244, 245, 246, 1));
+		background: white;
 		padding: 64px 16px 90px 16px;
 		min-height: 100vh;
 		height: auto;

@@ -13,14 +13,10 @@ export const useMediaQuery = (query) => {
     
     const listener = () => setMatches(media.matches);
     
-    // Современный способ
     media.addEventListener('change', listener);
     
     return () => media.removeEventListener('change', listener);
     
-    // Или старый способ для поддержки старых браузеров:
-    // media.addListener(listener);
-    // return () => media.removeListener(listener);
   }, [matches, query]);
 
   return matches;

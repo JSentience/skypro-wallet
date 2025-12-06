@@ -21,6 +21,23 @@ export const AnalyticsTitle = styled.h2`
 	}
 `;
 
+export const AnalyticsTitleMobileBlock = styled.div`
+	position: relative;
+`;
+
+export const AnalyticsTitleMobile = styled.button`
+	color: rgba(153, 153, 153, 1);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 150%;
+	letter-spacing: 0px;
+	padding-top: 20px;
+	padding-bottom: 12px;
+	text-align: left;
+	position: relative;
+	left: 20px;
+`;
+
 export const AnalyticsWrapper = styled.div`
 	max-width: 1200px;
 	margin: 0 auto;

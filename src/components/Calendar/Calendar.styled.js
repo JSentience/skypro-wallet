@@ -59,9 +59,11 @@ export const CalendarBlock = styled.div`
 	}
 	@media (max-width: 549px) {
 		width: 100% !important;
-		padding: 20px;
+		padding: 0;
 		margin: 0 auto;
 		grid-column: unset;
+		border-radius: 0;
+		box-shadow: none;
 	}
 `;
 
@@ -79,7 +81,7 @@ export const CalendarPeriod = styled.p`
 	letter-spacing: 0px;
 	text-align: center;
 	@media (max-width: 1024px) {
-		font-size: 20px;
+		/* font-size: 20px; */
 	}
 `;
 
@@ -179,8 +181,8 @@ export const Day = styled.div`
 		height: 50px;
 	}
 	@media (max-width: 549px) {
-		width: 35px;
-		height: 35px;
+		width: 41px;
+		height: 41px;
 	}
 `;
 
