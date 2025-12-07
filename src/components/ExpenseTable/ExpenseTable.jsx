@@ -3,6 +3,8 @@ import * as S from './ExpenseTable.styled';
 import { FilterCategory } from './FilterCategory';
 import { Filter } from './Filter';
 import { deleteTransaction } from '../../api/expensesApi';
+import { useMediaQuery } from 'react-responsive';
+import { breakpoints } from '../../breakpoints';
 
 // Маппинг категорий с английских на русские (вынесено наружу для предотвращения пересоздания)
 const CATEGORY_NAMES = {
@@ -34,6 +36,7 @@ export const ExpenseTable = ({
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [deletingId, setDeletingId] = useState(null);
+	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
 
 	const toggleCategory = useCallback(() => {
 		setIsCategoryOpen((prev) => {
@@ -202,10 +205,10 @@ export const ExpenseTable = ({
 
 	return (
 		<div>
-			<S.Container>
+			<S.Container $isMobile={isMobile}>
 				<S.HeaderWrapper>
 					<S.HeaderContainer>
-						<S.Title>Таблица расходов</S.Title>
+						<S.Title>{isMobile ? 'Мои расходы' : 'Таблица расходов'}</S.Title>
 						<S.ItemsContainer>
 							<S.FilterSection>
 								<S.FilterText>Фильтровать по категории</S.FilterText>

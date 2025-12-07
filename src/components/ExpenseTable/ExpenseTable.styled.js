@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { breakpoints } from '../../breakpoints';
 
 export const Container = styled.div`
 	width: 789px;
@@ -9,6 +10,10 @@ export const Container = styled.div`
 	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background-color: white;
 	margin-top: 32px;
+	@media (max-width: ${breakpoints.mobile}) {
+		background-color: #fff;
+		min-height: 1240px;
+	}
 `;
 
 export const HeaderWrapper = styled.div``;
