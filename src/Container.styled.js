@@ -8,5 +8,6 @@ export const Container = styled.div`
 	max-width: 1440px;
 	margin: 60px auto;
 	//align-items: center;
-	justify-content: center;
+	/* justify-content: center; AlexGutt пробую*/
+	justify-content: flex-start;
 `;

@@ -205,7 +205,7 @@ export const ExpenseTable = ({
 
 	return (
 		<div>
-			<S.Container $isMobile={isMobile}>
+			<S.Container>
 				<S.HeaderWrapper>
 					<S.HeaderContainer>
 						<S.Title>{isMobile ? 'Мои расходы' : 'Таблица расходов'}</S.Title>
@@ -225,7 +225,10 @@ export const ExpenseTable = ({
 									/>
 								)}
 							</S.FilterSection>
-							<S.FilterSection $marginleft="24px" $marginright="34px">
+							<S.FilterSection
+								$marginleft={isMobile ? '16px' : '24px'}
+								$marginright={isMobile ? '0px' : '34px'}
+							>
 								<S.FilterText>Сортировать по</S.FilterText>
 								<S.FilterButton onClick={toggleFilter}>
 									<S.FilterValue $marginleft="4px">
@@ -245,10 +248,30 @@ export const ExpenseTable = ({
 						</S.ItemsContainer>
 					</S.HeaderContainer>
 					<S.TableHeader>
-						<S.HeaderItem>Описание</S.HeaderItem>
-						<S.HeaderItem $marginleft="32px">Категория</S.HeaderItem>
-						<S.HeaderItem $marginleft="32px">Дата</S.HeaderItem>
-						<S.HeaderItem $marginleft="32px">Сумма</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '0px' : '32px'}
+							$paddingright={isMobile ? '20px' : '0px'}
+						>
+							Описание
+						</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '0px' : '32px'}
+							$paddingright={isMobile ? '19px' : '0px'}
+						>
+							Категория
+						</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '0px' : '32px'}
+							$paddingleft={isMobile ? '49px' : '0px'}
+						>
+							Дата
+						</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '0px' : '32px'}
+							$paddingleft={isMobile ? '39px' : '0px'}
+						>
+							Сумма
+						</S.HeaderItem>
 					</S.TableHeader>
 					<S.Divider />
 				</S.HeaderWrapper>
@@ -264,14 +287,16 @@ export const ExpenseTable = ({
 					) : (
 						displayTransactions.map((transaction) => (
 							<S.TableRow key={transaction._id}>
-								<S.RowItem>{transaction.description}</S.RowItem>
-								<S.RowItem $marginleft="32px">
+								<S.RowItem $marginleft={isMobile ? '16px' : '32px'}>
+									{transaction.description}
+								</S.RowItem>
+								<S.RowItem $marginleft={isMobile ? '0px' : '32px'}>
 									{getCategoryName(transaction.category)}
 								</S.RowItem>
-								<S.RowItem $marginleft="32px">
+								<S.RowItem $marginleft={isMobile ? '0px' : '32px'}>
 									{formatDate(transaction.date)}
 								</S.RowItem>
-								<S.RowItem $marginleft="32px">
+								<S.RowItem $marginleft={isMobile ? '0px' : '32px'}>
 									{formatAmount(transaction.sum)}
 								</S.RowItem>
 								<S.ActionsContainer>
