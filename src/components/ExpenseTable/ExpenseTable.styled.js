@@ -115,12 +115,12 @@ export const TableHeader = styled.div`
 	padding-right: 69px;
 	color: #999999;
 	@media (max-width: ${breakpoints.mobile}) {
-		padding: 0 16px;
 		margin-left: 0;
 		display: flex;
 		flex-wrap: wrap;
-		gap: 16px;
+		/* gap: 16px; */
 		justify-content: space-between;
+		padding-right: 16px;
 	}
 `;
 
@@ -143,7 +143,7 @@ export const Divider = styled.div`
 	border-top: 0.5px solid #999999;
 	margin-top: 5.75px;
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 100vh;
+		width: 100%;
 	}
 `;
 
@@ -159,6 +159,7 @@ export const TableContent = styled.div`
 	overflow-y: auto;
 	overflow-x: hidden;
 	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
 	}
 
 	&::-webkit-scrollbar {
@@ -194,9 +195,11 @@ export const TableRow = styled.div`
 	cursor: pointer;
 	margin-left: ${(props) => props.$marginleft};
 	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
 		margin-left: 0px;
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 	}
 `;
 

@@ -249,7 +249,7 @@ export const ExpenseTable = ({
 					</S.HeaderContainer>
 					<S.TableHeader>
 						<S.HeaderItem
-							$marginleft={isMobile ? '0px' : '32px'}
+							$marginleft={isMobile ? '16px' : '32px'}
 							$paddingright={isMobile ? '20px' : '0px'}
 						>
 							Описание
