@@ -13,7 +13,7 @@ export const Container = styled.div`
 	@media (max-width: ${breakpoints.mobile}) {
 		width: 480px;
 		background-color: #fff;
-		min-height: 2024px;
+		min-height: 24px;
 		border-radius: 0;
 		box-shadow: none;
 	}
