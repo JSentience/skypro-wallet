@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { breakpoints } from '../../breakpoints';
 
 export const Container = styled.div`
-	width: 789px;
+	max-width: 789px;
 	height: 618px;
 	display: flex;
 	flex-direction: column;
@@ -11,7 +11,6 @@ export const Container = styled.div`
 	background-color: white;
 	margin-top: 32px;
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 480px;
 		background-color: #fff;
 		min-height: 24px;
 		border-radius: 0;
@@ -116,12 +115,12 @@ export const TableHeader = styled.div`
 	padding-right: 69px;
 	color: #999999;
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 480px;
 		padding: 0 16px;
 		margin-left: 0;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 16px;
+		justify-content: space-between;
 	}
 `;
 
@@ -139,12 +138,12 @@ export const HeaderItem = styled.div`
 `;
 
 export const Divider = styled.div`
-	width: 789px;
+	max-width: 789px;
 	height: 0;
 	border-top: 0.5px solid #999999;
 	margin-top: 5.75px;
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 480px;
+		width: 100vh;
 	}
 `;
 
@@ -160,7 +159,6 @@ export const TableContent = styled.div`
 	overflow-y: auto;
 	overflow-x: hidden;
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 480px;
 	}
 
 	&::-webkit-scrollbar {
@@ -196,9 +194,9 @@ export const TableRow = styled.div`
 	cursor: pointer;
 	margin-left: ${(props) => props.$marginleft};
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 480px;
-		display: flex;
 		margin-left: 0px;
+		display: flex;
+		justify-content: space-between;
 	}
 `;
 
@@ -207,9 +205,10 @@ export const RowItem = styled.div`
 	width: 141px;
 	height: 15px;
 	margin-left: ${(props) => props.$marginleft || '0px'};
+	padding-left: ${(props) => props.$paddingleft};
+	padding-right: ${(props) => props.$paddingright};
 	@media (max-width: ${breakpoints.mobile}) {
 		font-size: 10px;
-		width: 71px;
 	}
 `;
 

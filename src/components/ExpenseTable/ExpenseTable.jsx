@@ -287,16 +287,28 @@ export const ExpenseTable = ({
 					) : (
 						displayTransactions.map((transaction) => (
 							<S.TableRow key={transaction._id}>
-								<S.RowItem $marginleft={isMobile ? '16px' : '32px'}>
+								<S.RowItem
+									$marginleft={isMobile ? '16px' : '32px'}
+									$paddingright={isMobile ? '20px' : '0px'}
+								>
 									{transaction.description}
 								</S.RowItem>
-								<S.RowItem $marginleft={isMobile ? '0px' : '32px'}>
+								<S.RowItem
+									$marginleft={isMobile ? '0px' : '32px'}
+									$paddingright={isMobile ? '19px' : '0px'}
+								>
 									{getCategoryName(transaction.category)}
 								</S.RowItem>
-								<S.RowItem $marginleft={isMobile ? '0px' : '32px'}>
+								<S.RowItem
+									$marginleft={isMobile ? '0px' : '32px'}
+									$paddingleft={isMobile ? '49px' : '0px'}
+								>
 									{formatDate(transaction.date)}
 								</S.RowItem>
-								<S.RowItem $marginleft={isMobile ? '0px' : '32px'}>
+								<S.RowItem
+									$marginleft={isMobile ? '0px' : '32px'}
+									$paddingleft={isMobile ? '39px' : '0px'}
+								>
 									{formatAmount(transaction.sum)}
 								</S.RowItem>
 								<S.ActionsContainer>
