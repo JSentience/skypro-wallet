@@ -8,7 +8,8 @@ export const MainStyled = styled.main`
 	padding-left: calc(50% - 41%);
 	padding-right: calc(50% - 41%);
 	@media (max-width: 1024px) {
-		padding-left: calc(50% - 45%);
-		padding-right: calc(50% - 45%);
+		/* padding-left: calc(50% - 45%);
+		padding-right: calc(50% - 45%); */
+		padding: 0;
 	}
 `;

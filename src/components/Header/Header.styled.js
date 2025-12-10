@@ -30,7 +30,7 @@ export const HeaderWrapper = styled.div`
 		padding: 0 10px;
 		height: 54px;
 		flex-direction: row;
-		justify-content: space-between;
+		/* justify-content: space-between; */
 	}
 `;
 export const ExitLinkA = styled.a`

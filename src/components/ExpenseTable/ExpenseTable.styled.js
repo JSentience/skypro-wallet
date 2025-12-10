@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { breakpoints } from '../../breakpoints';
 
 export const Container = styled.div`
-	width: 789px;
+	max-width: 789px;
 	height: 618px;
 	display: flex;
 	flex-direction: column;
@@ -9,6 +10,12 @@ export const Container = styled.div`
 	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background-color: white;
 	margin-top: 32px;
+	@media (max-width: ${breakpoints.mobile}) {
+		background-color: #fff;
+		min-height: 24px;
+		border-radius: 0;
+		box-shadow: none;
+	}
 `;
 
 export const HeaderWrapper = styled.div``;
@@ -18,6 +25,12 @@ export const HeaderContainer = styled.div`
 	align-items: baseline;
 	justify-content: space-between;
 	margin-left: 32px;
+	@media (max-width: ${breakpoints.mobile}) {
+		display: flex;
+		flex-direction: column;
+		padding: 0 16px;
+		margin-left: 0;
+	}
 `;
 
 export const Title = styled.h2`
@@ -27,25 +40,34 @@ export const Title = styled.h2`
 	line-height: 29px;
 	margin-top: 32px;
 	margin-bottom: 32px;
+	@media (max-width: ${breakpoints.mobile}) {
+		margin-bottom: 21px;
+	}
 `;
 
 export const ItemsContainer = styled.div`
 	display: flex;
 	align-items: center;
+	@media (max-width: ${breakpoints.mobile}) {
+		margin-bottom: 24px;
+	}
 `;
 
 export const FilterSection = styled.div`
 	display: flex;
 	align-items: baseline;
 	position: relative;
-	margin-left: ${(props) => props.$marginleft || '0px'};
-	margin-right: ${(props) => props.$marginright || '0px'};
+	margin-left: ${(props) => props.$marginleft};
+	margin-right: ${(props) => props.$marginright};
 `;
 
 export const FilterText = styled.div`
 	font-size: 12px;
 	font-weight: 400;
 	line-height: 150%;
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 10px;
+	}
 `;
 
 export const FilterButton = styled.button`
@@ -65,12 +87,18 @@ export const FilterValue = styled.div`
 	text-align: center;
 	border-bottom: 0.5px solid #1fa46c;
 	margin-left: ${(props) => props.$marginleft || '6.5px'};
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 10px;
+	}
 `;
 
 export const FilterIcon = styled.img`
 	height: 7px;
 	width: 7px;
 	margin-left: 8px;
+	@media (max-width: ${breakpoints.mobile}) {
+		margin-left: 6px;
+	}
 `;
 
 export const TableHeader = styled.div`
@@ -86,6 +114,14 @@ export const TableHeader = styled.div`
 	margin-left: 32px;
 	padding-right: 69px;
 	color: #999999;
+	@media (max-width: ${breakpoints.mobile}) {
+		margin-left: 0;
+		display: flex;
+		flex-wrap: wrap;
+		/* gap: 16px; */
+		justify-content: space-between;
+		padding-right: 16px;
+	}
 `;
 
 export const HeaderItem = styled.div`
@@ -93,13 +129,22 @@ export const HeaderItem = styled.div`
 	width: 141px;
 	height: 15px;
 	margin-left: ${(props) => props.$marginleft || '0px'};
+	padding-left: ${(props) => props.$paddingleft};
+	padding-right: ${(props) => props.$paddingright};
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 74px;
+		height: 12px;
+	}
 `;
 
 export const Divider = styled.div`
-	width: 789px;
+	max-width: 789px;
 	height: 0;
 	border-top: 0.5px solid #999999;
 	margin-top: 5.75px;
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+	}
 `;
 
 export const TableContent = styled.div`
@@ -113,6 +158,9 @@ export const TableContent = styled.div`
 	padding: 18.25px 6px 0 0;
 	overflow-y: auto;
 	overflow-x: hidden;
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+	}
 
 	&::-webkit-scrollbar {
 		width: 6px;
@@ -145,6 +193,14 @@ export const TableRow = styled.div`
 	align-items: center;
 	margin-left: 32px;
 	cursor: pointer;
+	margin-left: ${(props) => props.$marginleft};
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+		margin-left: 0px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 `;
 
 export const RowItem = styled.div`
@@ -152,6 +208,11 @@ export const RowItem = styled.div`
 	width: 141px;
 	height: 15px;
 	margin-left: ${(props) => props.$marginleft || '0px'};
+	padding-left: ${(props) => props.$paddingleft};
+	padding-right: ${(props) => props.$paddingright};
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 10px;
+	}
 `;
 
 export const ActionsContainer = styled.div`
@@ -159,6 +220,9 @@ export const ActionsContainer = styled.div`
 	width: 36px;
 	height: 12px;
 	margin-left: 32px;
+	@media (max-width: ${breakpoints.mobile}) {
+		display: none;
+	}
 `;
 
 export const ActionIcon = styled.img`

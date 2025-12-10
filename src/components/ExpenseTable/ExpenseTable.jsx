@@ -3,6 +3,8 @@ import * as S from './ExpenseTable.styled';
 import { FilterCategory } from './FilterCategory';
 import { Filter } from './Filter';
 import { deleteTransaction } from '../../api/expensesApi';
+import { useMediaQuery } from 'react-responsive';
+import { breakpoints } from '../../breakpoints';
 
 // Маппинг категорий с английских на русские (вынесено наружу для предотвращения пересоздания)
 const CATEGORY_NAMES = {
@@ -34,6 +36,7 @@ export const ExpenseTable = ({
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [deletingId, setDeletingId] = useState(null);
+	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
 
 	const toggleCategory = useCallback(() => {
 		setIsCategoryOpen((prev) => {
@@ -205,7 +208,7 @@ export const ExpenseTable = ({
 			<S.Container>
 				<S.HeaderWrapper>
 					<S.HeaderContainer>
-						<S.Title>Таблица расходов</S.Title>
+						<S.Title>{isMobile ? 'Мои расходы' : 'Таблица расходов'}</S.Title>
 						<S.ItemsContainer>
 							<S.FilterSection>
 								<S.FilterText>Фильтровать по категории</S.FilterText>
@@ -222,7 +225,10 @@ export const ExpenseTable = ({
 									/>
 								)}
 							</S.FilterSection>
-							<S.FilterSection $marginleft="24px" $marginright="34px">
+							<S.FilterSection
+								$marginleft={isMobile ? '16px' : '24px'}
+								$marginright={isMobile ? '0px' : '34px'}
+							>
 								<S.FilterText>Сортировать по</S.FilterText>
 								<S.FilterButton onClick={toggleFilter}>
 									<S.FilterValue $marginleft="4px">
@@ -242,10 +248,30 @@ export const ExpenseTable = ({
 						</S.ItemsContainer>
 					</S.HeaderContainer>
 					<S.TableHeader>
-						<S.HeaderItem>Описание</S.HeaderItem>
-						<S.HeaderItem $marginleft="32px">Категория</S.HeaderItem>
-						<S.HeaderItem $marginleft="32px">Дата</S.HeaderItem>
-						<S.HeaderItem $marginleft="32px">Сумма</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '16px' : '32px'}
+							$paddingright={isMobile ? '20px' : '0px'}
+						>
+							Описание
+						</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '0px' : '32px'}
+							$paddingright={isMobile ? '19px' : '0px'}
+						>
+							Категория
+						</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '0px' : '32px'}
+							$paddingleft={isMobile ? '49px' : '0px'}
+						>
+							Дата
+						</S.HeaderItem>
+						<S.HeaderItem
+							$marginleft={isMobile ? '0px' : '32px'}
+							$paddingleft={isMobile ? '39px' : '0px'}
+						>
+							Сумма
+						</S.HeaderItem>
 					</S.TableHeader>
 					<S.Divider />
 				</S.HeaderWrapper>
@@ -261,14 +287,28 @@ export const ExpenseTable = ({
 					) : (
 						displayTransactions.map((transaction) => (
 							<S.TableRow key={transaction._id}>
-								<S.RowItem>{transaction.description}</S.RowItem>
-								<S.RowItem $marginleft="32px">
+								<S.RowItem
+									$marginleft={isMobile ? '16px' : '32px'}
+									$paddingright={isMobile ? '20px' : '0px'}
+								>
+									{transaction.description}
+								</S.RowItem>
+								<S.RowItem
+									$marginleft={isMobile ? '0px' : '32px'}
+									$paddingright={isMobile ? '19px' : '0px'}
+								>
 									{getCategoryName(transaction.category)}
 								</S.RowItem>
-								<S.RowItem $marginleft="32px">
+								<S.RowItem
+									$marginleft={isMobile ? '0px' : '32px'}
+									$paddingleft={isMobile ? '49px' : '0px'}
+								>
 									{formatDate(transaction.date)}
 								</S.RowItem>
-								<S.RowItem $marginleft="32px">
+								<S.RowItem
+									$marginleft={isMobile ? '0px' : '32px'}
+									$paddingleft={isMobile ? '39px' : '0px'}
+								>
 									{formatAmount(transaction.sum)}
 								</S.RowItem>
 								<S.ActionsContainer>
