@@ -1,23 +1,28 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	width: 100%;
 	background: #f4f5f6;
-	height: 870px;
-	//height: 100vh;
+	min-height: 100vh;
 `;
 export const LoginContainer = styled.div`
 	display: inline-flex;
-	padding: 32px 34px 32px 32px;
+	padding: ${({ $isMobile }) => ($isMobile ? '16px' : '32px 34px 32px 32px')};
 	justify-content: center;
 	align-items: center;
-	border-radius: 30px;
+	border-radius: ${(props) => (props.$isMobile ? '0' : '30px')};
 	background: #ffffff;
-	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
+	box-shadow: ${(props) =>
+		props.$isMobile ? 'none' : '0 20px 67px -12px rgba(0, 0, 0, 0.13)'};
+	width: ${(props) => (props.$isMobile ? '100%' : 'auto')};
+	height: ${(props) => (props.$isMobile ? '100vh' : 'auto')};
 `;
 export const LoginWrapper = styled.div`
 	display: flex;
-	width: 313px;
+	width: ${({ $isMobile }) => ($isMobile ? '100%' : '313px')};
 	flex-direction: column;
 	gap: 24px;
 	justify-content: center;
