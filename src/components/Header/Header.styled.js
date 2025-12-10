@@ -11,10 +11,15 @@ export const HeaderStyled = styled.header`
 	background: #fff;
 	padding-left: calc(50% - 41%);
 	padding-right: calc(50% - 41%);
+	@media (1025px <= width <= 1439px) {
+		padding-left: calc(50% - 43%);
+		padding-right: calc(50% - 43%);
+	}
 
 	@media (max-width: ${breakpoints.mobile}) {
 		padding-left: 0;
 		padding-right: 0;
+		background: rgba(244, 245, 246, 1);
 	}
 `;
 export const HeaderWrapper = styled.div`
