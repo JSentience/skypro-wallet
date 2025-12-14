@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { breakpoints } from '../../breakpoints';
 
 export const Container = styled.div`
 	width: 379px;
@@ -11,6 +12,17 @@ export const Container = styled.div`
 	margin-top: 32px;
 	padding: 32px 32px 32px 34px;
 	position: relative;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+		height: auto;
+		min-height: calc(100vh - 54px);
+		border-radius: 0;
+		box-shadow: none;
+		margin-top: 0;
+		padding: 24px 16px 32px 16px;
+		background-color: #ffffff;
+	}
 `;
 
 export const Content = styled.div`
@@ -21,6 +33,12 @@ export const Content = styled.div`
 	align-items: flex-start;
 	gap: 24px;
 	background-color: white;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+		height: auto;
+		gap: 20px;
+	}
 `;
 
 export const Title = styled.h2`
@@ -30,6 +48,50 @@ export const Title = styled.h2`
 	font-weight: 700;
 	line-height: 29px;
 	text-align: center;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 20px;
+		line-height: 24px;
+		text-align: left;
+		width: 100%;
+	}
+`;
+
+export const BackButton = styled.button`
+	display: none;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		color: #999;
+		text-align: center;
+		font-size: 12px;
+		font-style: normal;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		background: none;
+		border: none;
+		font-family: 'Montserrat', sans-serif;
+		line-height: 17px;
+		cursor: pointer;
+		padding: 0;
+		margin-bottom: 8px;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+`;
+
+export const BackIcon = styled.img`
+	width: 20px;
+	height: 20px;
+`;
+
+export const TitleContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 `;
 
 export const InputGroup = styled.div`
@@ -38,6 +100,11 @@ export const InputGroup = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+		height: auto;
+	}
 `;
 
 export const InputLabel = styled.h3`
@@ -47,6 +114,11 @@ export const InputLabel = styled.h3`
 	font-weight: 600;
 	line-height: 20px;
 	text-align: left;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 14px;
+		line-height: 17px;
+	}
 `;
 
 export const Input = styled.input`
@@ -68,6 +140,11 @@ export const Input = styled.input`
 		border-color: ${(props) => (props.$error ? '#ff4444' : '#1fa46c')};
 		background-color: ${(props) => (props.$error ? '#ffebee' : '#dbffe9')};
 	}
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+		margin-top: 12px;
+	}
 `;
 
 export const CategorySection = styled.div`
@@ -76,6 +153,11 @@ export const CategorySection = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+		height: auto;
+	}
 `;
 
 export const CategoryGrid = styled.div`
@@ -86,6 +168,12 @@ export const CategoryGrid = styled.div`
 	align-items: flex-start;
 	gap: 6px;
 	margin-top: 16px;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+		height: auto;
+		margin-top: 12px;
+	}
 `;
 
 export const CategoryItem = styled.div`
@@ -135,6 +223,10 @@ export const Button = styled.button`
 		background-color: #cccccc;
 		cursor: not-allowed;
 	}
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
+	}
 `;
 
 export const ButtonText = styled.div`
@@ -157,11 +249,24 @@ export const ErrorMessage = styled.div`
 	border-radius: 4px;
 	border: 1px solid #ffcdd2;
 	z-index: 10;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		top: 60px;
+		left: 16px;
+		right: 16px;
+	}
 `;
 
 export const ButtonContainer = styled.div`
 	display: flex;
 	gap: 12px;
+	@media (max-width: ${breakpoints.mobile}) {
+		display: flex;
+		width: 375px;
+		padding: 24px 16px;
+		justify-content: center;
+		align-items: center;
+	}
 `;
 
 export const FieldError = styled.div`

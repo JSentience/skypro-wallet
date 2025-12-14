@@ -17,6 +17,7 @@ export const HeaderStyled = styled.header`
 	}
 
 	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
 		padding-left: 0;
 		padding-right: 0;
 		background: rgba(244, 245, 246, 1);

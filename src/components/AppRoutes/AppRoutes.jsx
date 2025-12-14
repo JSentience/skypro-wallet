@@ -5,6 +5,7 @@ import { SignUpPage } from '../../pages/SignUpPage';
 import { CostAnalysisPage } from '../../pages/CostAnalysisPage';
 import { MyExpensesPage } from '../../pages/MyExpensesPage';
 import { NewExpensePage } from '../../pages/NewExpensePage';
+import { EditExpensePage } from '../../pages/EditExpensePage';
 import { PrivatePage } from '../../pages/PrivatePage';
 
 export const AppRoutes = () => {
@@ -15,6 +16,7 @@ export const AppRoutes = () => {
 				<Route path="/analysis" element={<CostAnalysisPage />} />
 				<Route path="/expenses" element={<MyExpensesPage />} />
 				<Route path="/new-expense" element={<NewExpensePage />} />
+				<Route path="/edit-expense" element={<EditExpensePage />} />
 			</Route>
 			<Route path="/signin" element={<SignInPage />} />
 			<Route path="/signup" element={<SignUpPage />} />

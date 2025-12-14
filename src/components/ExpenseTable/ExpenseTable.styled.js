@@ -9,24 +9,44 @@ export const Container = styled.div`
 	border-radius: 30px;
 	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background-color: white;
-	margin-top: 32px;
+	//margin-top: 32px;
 	@media (max-width: ${breakpoints.mobile}) {
-		background-color: #fff;
+		background-color: #fdfdfd;
+		max-width: 375px;
 		min-height: 24px;
 		border-radius: 0;
 		box-shadow: none;
 	}
 `;
 
-export const HeaderWrapper = styled.div``;
+export const AddExpenseButton = styled.button`
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	color: #000;
+	text-align: center;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 150%; /* 18px */
+`;
+
+export const HeaderWrapper = styled.div`
+	display: flex;
+	gap: 30px;
+	align-items: baseline;
+`;
 
 export const HeaderContainer = styled.div`
+	width: auto;
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
 	margin-left: 32px;
 	@media (max-width: ${breakpoints.mobile}) {
 		display: flex;
+		max-width: 375px;
 		flex-direction: column;
 		padding: 0 16px;
 		margin-left: 0;
@@ -38,7 +58,7 @@ export const Title = styled.h2`
 	font-size: 24px;
 	font-weight: 700;
 	line-height: 29px;
-	margin-top: 32px;
+	//margin-top: 32px;
 	margin-bottom: 32px;
 	@media (max-width: ${breakpoints.mobile}) {
 		margin-bottom: 21px;
@@ -49,6 +69,9 @@ export const ItemsContainer = styled.div`
 	display: flex;
 	align-items: center;
 	@media (max-width: ${breakpoints.mobile}) {
+		display: inline-flex;
+		align-items: center;
+		gap: 16px;
 		margin-bottom: 24px;
 	}
 `;
@@ -59,9 +82,17 @@ export const FilterSection = styled.div`
 	position: relative;
 	margin-left: ${(props) => props.$marginleft};
 	margin-right: ${(props) => props.$marginright};
+
+	@media (max-width: ${breakpoints.mobile}) {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin-left: 0;
+		margin-right: 0;
+	}
 `;
 
-export const FilterText = styled.div`
+export const FilterText = styled.p`
 	font-size: 12px;
 	font-weight: 400;
 	line-height: 150%;
@@ -76,6 +107,14 @@ export const FilterButton = styled.button`
 	cursor: pointer;
 	border: none;
 	background: none;
+	padding: 0;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		display: inline-flex;
+		//padding: 7px 5px;
+		align-items: center;
+		gap: 6px;
+	}
 `;
 
 export const FilterValue = styled.div`
@@ -89,6 +128,8 @@ export const FilterValue = styled.div`
 	margin-left: ${(props) => props.$marginleft || '6.5px'};
 	@media (max-width: ${breakpoints.mobile}) {
 		font-size: 10px;
+		border-bottom: none;
+		margin-left: 0;
 	}
 `;
 
@@ -97,7 +138,9 @@ export const FilterIcon = styled.img`
 	width: 7px;
 	margin-left: 8px;
 	@media (max-width: ${breakpoints.mobile}) {
-		margin-left: 6px;
+		width: 6px;
+		height: 6px;
+		margin-left: 0;
 	}
 `;
 
@@ -106,34 +149,23 @@ export const TableHeader = styled.div`
 	font-weight: 400;
 	line-height: 150%;
 	letter-spacing: 0;
-	width: 723px;
-	height: 15px;
-	display: flex;
-	justify-content: flex-start;
+	display: grid;
+	grid-template-columns: 173px 173px 173px 173px 32px;
 	align-items: center;
-	margin-left: 32px;
-	padding-right: 69px;
+	padding: 0 32px 0 32px;
 	color: #999999;
 	@media (max-width: ${breakpoints.mobile}) {
-		margin-left: 0;
-		display: flex;
-		flex-wrap: wrap;
-		/* gap: 16px; */
-		justify-content: space-between;
-		padding-right: 16px;
+		display: grid;
+		grid-template-columns: 74px 74px 74px 74px;
+		padding: 0 16px;
+		column-gap: 16px;
 	}
 `;
 
 export const HeaderItem = styled.div`
 	font-size: 12px;
-	width: 141px;
-	height: 15px;
-	margin-left: ${(props) => props.$marginleft || '0px'};
-	padding-left: ${(props) => props.$paddingleft};
-	padding-right: ${(props) => props.$paddingright};
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 74px;
-		height: 12px;
+		font-size: 10px;
 	}
 `;
 
@@ -149,16 +181,17 @@ export const Divider = styled.div`
 
 export const TableContent = styled.div`
 	width: 789px;
-	height: 479px;
+	height: auto;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;
 	gap: 14px;
-	padding: 18.25px 6px 0 0;
+	padding: 18px 8px 16px 0;
 	overflow-y: auto;
 	overflow-x: hidden;
 	@media (max-width: ${breakpoints.mobile}) {
+		max-width: 375px;
 		width: 100%;
 	}
 
@@ -182,34 +215,56 @@ export const TableContent = styled.div`
 	}
 `;
 
+export const ButtonWrapper = styled.div`
+	display: flex;
+	width: 375px;
+	padding: 24px 16px;
+	gap: 12px;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: normal;
+`;
+
+export const DeleteExpenseButton = styled.a`
+	color: #999;
+	text-align: center;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 150%; /* 18px */
+	cursor: pointer;
+`;
+
 export const TableRow = styled.div`
 	font-weight: 400;
 	line-height: 150%;
 	letter-spacing: 0;
-	width: 723px;
-	height: 15px;
-	display: flex;
-	justify-content: flex-start;
+	display: grid;
+	grid-template-columns: 173px 173px 173px 173px 32px;
 	align-items: center;
-	margin-left: 32px;
+	padding: 0 32px 0 32px;
 	cursor: pointer;
-	margin-left: ${(props) => props.$marginleft};
 	@media (max-width: ${breakpoints.mobile}) {
-		width: 100%;
-		margin-left: 0px;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+		display: grid;
+		grid-template-columns: 74px 74px 74px 74px;
+		padding: 0 16px;
+		column-gap: 16px;
+		background-color: ${(props) =>
+			props.$isSelected ? '#e8f5f0' : 'transparent'};
+		border-radius: 8px;
+		transition: background-color 0.2s ease;
 	}
 `;
 
 export const RowItem = styled.div`
 	font-size: 12px;
-	width: 141px;
-	height: 15px;
-	margin-left: ${(props) => props.$marginleft || '0px'};
-	padding-left: ${(props) => props.$paddingleft};
-	padding-right: ${(props) => props.$paddingright};
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	@media (max-width: ${breakpoints.mobile}) {
 		font-size: 10px;
 	}
@@ -217,9 +272,9 @@ export const RowItem = styled.div`
 
 export const ActionsContainer = styled.div`
 	display: flex;
-	width: 36px;
-	height: 12px;
-	margin-left: 32px;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 12px;
 	@media (max-width: ${breakpoints.mobile}) {
 		display: none;
 	}
@@ -228,7 +283,6 @@ export const ActionsContainer = styled.div`
 export const ActionIcon = styled.img`
 	width: 12px;
 	height: 12px;
-	margin-right: ${(props) => props.$marginright || '0px'};
 	cursor: pointer;
 `;
 export const LoadingText = styled.div`
