@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ExpenseTable } from '../ExpenseTable/ExpenseTable';
 import { NewExpense } from '../NewExpense/NewExpense';
 import { getTransactions } from '../../api/expensesApi';
@@ -73,24 +73,24 @@ export const ExpensesLayout = () => {
 
 	if (loading) {
 		return (
-			<div>
+			<>
 				<S.PageTitle>Мои расходы</S.PageTitle>
 				<S.LoadingText>Загрузка транзакций...</S.LoadingText>
-			</div>
+			</>
 		);
 	}
 
 	if (error) {
 		return (
-			<div>
+			<>
 				<S.PageTitle>Мои расходы</S.PageTitle>
 				<S.ErrorText>{error}</S.ErrorText>
-			</div>
+			</>
 		);
 	}
 
 	return (
-		<div>
+		<>
 			{isMobile ? '' : <S.PageTitle>Мои расходы</S.PageTitle>}
 
 			{isMobile ? (
@@ -119,6 +119,6 @@ export const ExpensesLayout = () => {
 					/>
 				</S.MainContent>
 			)}
-		</div>
+		</>
 	);
 };

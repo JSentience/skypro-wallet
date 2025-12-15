@@ -20,9 +20,9 @@ export const MainStyled = styled.main`
 	}
 
 	@media (max-width: 549px) {
-		position: relative;
-		background: white;
-		padding: 64px 16px 90px 16px;
+		//position: relative;
+		background: #ffffff;
+		padding: 54px 16px 90px 16px;
 		min-height: 100vh;
 		height: auto;
 		box-sizing: border-box;

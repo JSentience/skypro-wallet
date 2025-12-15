@@ -16,6 +16,7 @@ export const Container = styled.div`
 		min-height: 24px;
 		border-radius: 0;
 		box-shadow: none;
+		height: auto;
 	}
 `;
 
@@ -34,6 +35,7 @@ export const AddExpenseButton = styled.button`
 
 export const HeaderWrapper = styled.div`
 	display: flex;
+	padding: 24px 0 0 0;
 	gap: 30px;
 	align-items: baseline;
 `;
@@ -216,6 +218,7 @@ export const TableContent = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
+	background: #ffffff;
 	display: flex;
 	width: 375px;
 	padding: 24px 16px;
@@ -237,6 +240,7 @@ export const DeleteExpenseButton = styled.a`
 	font-weight: 400;
 	line-height: 150%; /* 18px */
 	cursor: pointer;
+	text-decoration: underline;
 `;
 
 export const TableRow = styled.div`
