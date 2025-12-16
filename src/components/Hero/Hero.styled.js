@@ -16,7 +16,7 @@ export const MainStyled = styled.main`
 	@media (max-width: 1024px) {
 		/* padding-left: calc(50% - 45%);
 		padding-right: calc(50% - 45%); */
-		padding: 0;
+		padding: 64px;
 	}
 
 	@media (max-width: 549px) {
