@@ -359,6 +359,16 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 		navigate('/expenses');
 	};
 
+	// Проверка заполненности всех полей формы
+	const isFormValid = () => {
+		return (
+			formData.description.trim() !== '' &&
+			formData.category !== '' &&
+			formData.date !== '' &&
+			formData.sum !== ''
+		);
+	};
+
 	const categories = [
 		{ name: 'Еда', icon: '/bag.svg' },
 		{ name: 'Транспорт', icon: '/car.svg' },
@@ -467,7 +477,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 					</S.InputGroup>
 
 					<S.ButtonContainer>
-						<S.Button onClick={handleSave} disabled={loading}>
+						<S.Button onClick={handleSave} disabled={loading || !isFormValid()}>
 							<S.ButtonText>
 								{loading
 									? 'Сохранение...'

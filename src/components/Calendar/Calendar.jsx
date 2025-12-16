@@ -48,13 +48,6 @@ const generateMonthData = (year, month) => {
 
 export const Calendar = ({ selectedRange, onSelectionChange }) => {
 	const isMobile = useMediaQuery('(max-width: 480px)');
-	console.log('📅 Calendar props:', {
-		selectedRange: selectedRange,
-		hasStart: !!selectedRange?.start,
-		hasEnd: !!selectedRange?.end,
-		hasOnSelectionChange: !!onSelectionChange,
-		isMobile: isMobile,
-	});
 
 	const [viewMode, setViewMode] = useState('month');
 
@@ -63,13 +56,8 @@ export const Calendar = ({ selectedRange, onSelectionChange }) => {
 	};
 
 	const handleSelectionChange = (newSelection) => {
-		console.log('🔄 Calendar handleSelectionChange:', newSelection);
 		// Вызываем функцию из пропсов вместо setSelectedRange
 		onSelectionChange(newSelection);
-
-		if (newSelection.start && newSelection.end) {
-			console.log('Выбран период для API:', newSelection);
-		}
 	};
 
 	return (

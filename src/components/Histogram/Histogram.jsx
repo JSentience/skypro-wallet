@@ -33,8 +33,6 @@ const categoryNames = {
 };
 
 export const Histogram = ({ dateRange, expensesData, loading, error }) => {
-	console.log('📊 Histogram получил данные:', { expensesData, loading, error });
-
 	if (loading) {
 		return (
 			<S.HistogramBlock>

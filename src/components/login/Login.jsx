@@ -57,6 +57,16 @@ export const Login = () => {
 		navigate(isSignIn ? '/signup' : '/signin');
 	};
 
+	// Проверка заполненности всех обязательных полей
+	const isFormValid = () => {
+		const hasLoginAndPassword =
+			loginValue.trim() !== '' && password.trim() !== '';
+		if (isSignIn) {
+			return hasLoginAndPassword;
+		}
+		return hasLoginAndPassword && name.trim() !== '';
+	};
+
 	return (
 		<>
 			<S.Wrapper $isMobile={isMobile}>
@@ -88,7 +98,11 @@ export const Login = () => {
 									onChange={(e) => setPassword(e.target.value)}
 								/>
 							</S.InputForm>
-							<MainButton type="submit" onClick={handleSubmit}>
+							<MainButton
+								type="submit"
+								onClick={handleSubmit}
+								disabled={!isFormValid()}
+							>
 								{isSignIn ? 'Войти' : 'Зарегистрироваться'}
 							</MainButton>
 							<S.ChangeForm>
@@ -130,7 +144,11 @@ export const Login = () => {
 										onChange={(e) => setPassword(e.target.value)}
 									/>
 								</S.InputForm>
-								<MainButton type="submit" onClick={handleSubmit}>
+								<MainButton
+									type="submit"
+									onClick={handleSubmit}
+									disabled={!isFormValid()}
+								>
 									{isSignIn ? 'Войти' : 'Зарегистрироваться'}
 								</MainButton>
 								<S.ChangeForm>
