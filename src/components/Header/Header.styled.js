@@ -76,6 +76,7 @@ export const RightContainer = styled.div`
 	gap: 20px;
 	align-items: center;
 `;
+// noinspection CssNonIntegerLengthInPixels
 export const MobileMenu = styled.div`
 	position: absolute;
 	display: inline-flex;

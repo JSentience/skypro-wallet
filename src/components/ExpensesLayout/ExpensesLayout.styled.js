@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
-export const PageContainer = styled.div`
+export const ExpensesWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-	background-color: #ffffffff;
 `;
 
 export const PageTitle = styled.h1`
@@ -15,6 +14,7 @@ export const PageTitle = styled.h1`
 	line-height: 150%;
 	text-align: left;
 	margin-top: 36px;
+	margin-bottom: 32px;
 `;
 
 export const MainContent = styled.main`

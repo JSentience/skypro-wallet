@@ -9,7 +9,6 @@ export const Container = styled.div`
 	border-radius: 30px;
 	box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background-color: white;
-	margin-top: 32px;
 	padding: 32px 32px 32px 34px;
 	position: relative;
 
@@ -20,7 +19,7 @@ export const Container = styled.div`
 		border-radius: 0;
 		box-shadow: none;
 		margin-top: 0;
-		padding: 24px 16px 32px 16px;
+		padding: 24px 0 32px 0;
 		background-color: #ffffff;
 	}
 `;
@@ -226,6 +225,7 @@ export const Button = styled.button`
 
 	@media (max-width: ${breakpoints.mobile}) {
 		width: 100%;
+		max-width: 373px;
 	}
 `;
 
@@ -258,12 +258,19 @@ export const ErrorMessage = styled.div`
 `;
 
 export const ButtonContainer = styled.div`
+	width: 100%;
 	display: flex;
 	gap: 12px;
 	@media (max-width: ${breakpoints.mobile}) {
-		display: flex;
-		width: 375px;
+		background: #ffffff;
+		box-shadow: 0 -20px 67px -12px rgba(0, 0, 0, 0.13);
+		position: fixed;
+		bottom: 0;
 		padding: 24px 16px;
+		left: clamp(0px, -57.14px + 15.24vw, 16px);
+
+		display: flex;
+		width: 100%;
 		justify-content: center;
 		align-items: center;
 	}

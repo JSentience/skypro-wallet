@@ -80,7 +80,7 @@ export const MobileButtonContainer = styled.div`
 	@media (max-width: 549px) {
 		display: block;
 		width: 100%;
-		padding: 15px 16px;
+		padding: 24px 16px;
 		background: rgba(255, 255, 255, 1);
 		box-shadow: 0px -20px 67px -12px rgba(0, 0, 0, 0.13);
 		position: fixed;
@@ -98,12 +98,12 @@ export const MobileButton = styled.button`
 	@media (max-width: 549px) {
 		display: block;
 		width: 100%;
-		padding: 16px;
+		padding: 12px;
 		background: rgba(31, 164, 108, 1);
 		color: white;
 		border: none;
 		border-radius: 6px;
-		font-size: 16px;
+		font-size: 12px;
 		font-weight: 600;
 		cursor: pointer;
 		transition: background 0.3s;
