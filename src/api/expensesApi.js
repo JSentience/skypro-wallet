@@ -8,208 +8,159 @@ const BASE_URL = '/api';
 axiosRetry(axios, {
 	retries: 3,
 	retryDelay: (retryCount) => {
-		console.warn(`Повторная попытка запроса #${retryCount}`);
 		return retryCount * 1000; // Увеличивающаяся задержка
 	},
 	retryCondition: (error) => {
 		// Повторять при сетевых ошибках или 5xx статусах
-		return axiosRetry.isNetworkOrIdempotentRequestError(error) ||
-			   (error.response && error.response.status >= 500);
+		return (
+			axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+			(error.response && error.response.status >= 500)
+		);
 	},
 });
 
-export const getTransactions = async (filters = {}) => {
-	try {
-		const token = getToken();
-
-		if (!token) {
-			throw new Error('Токен авторизации не найден');
-		}
-
-		// Создаем параметры запроса
-		const params = new URLSearchParams();
-
-		// Добавляем параметр сортировки
-		if (filters.sortBy) {
-			params.append('sortBy', filters.sortBy);
-		}
-
-		// Добавляем параметр фильтрации по категориям
-		if (filters.filterBy && filters.filterBy.length > 0) {
-			params.append('filterBy', filters.filterBy.join(','));
-		}
-
-		const url = `${BASE_URL}/transactions${params.toString() ? `?${params.toString()}` : ''}`;
-
-		const response = await axios.get(url, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
-
-		return response.data;
-	} catch (error) {
-		console.error('Ошибка при получении транзакций:', error);
-		throw new Error(error.response?.data?.message || error.message);
+const getAuthHeaders = () => {
+	const token = getToken();
+	if (!token) {
+		throw new Error('Токен авторизации не найден');
 	}
+	return {
+		Authorization: `Bearer ${token}`,
+		'Content-Type': '',
+	};
+};
+
+const buildQueryParams = (filters) => {
+	const params = new URLSearchParams();
+
+	if (filters.sortBy) {
+		params.append('sortBy', filters.sortBy);
+	}
+
+	if (filters.filterBy && filters.filterBy.length > 0) {
+		params.append('filterBy', filters.filterBy.join(','));
+	}
+
+	return params.toString();
+};
+
+export const getTransactions = async (filters = {}) => {
+	const headers = getAuthHeaders();
+	const queryString = buildQueryParams(filters);
+	const url = `${BASE_URL}/transactions${queryString ? `?${queryString}` : ''}`;
+
+	const response = await axios.get(url, { headers });
+	return response.data;
 };
 
 export const createTransaction = async (transactionData) => {
-	try {
-		const token = getToken();
+	const headers = getAuthHeaders();
+	const response = await axios.post(
+		`${BASE_URL}/transactions`,
+		transactionData,
+		{ headers },
+	);
+	return response.data;
+};
 
-		if (!token) {
-			throw new Error('Токен авторизации не найден');
-		}
-
-		const response = await axios.post(
-			`${BASE_URL}/transactions`,
-			transactionData,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-					'Content-Type': '',
-				},
-			},
-		);
-
-		return response.data;
-	} catch (error) {
-		throw new Error(error.response?.data?.message || error.message);
+const validateTransactionId = (transactionId) => {
+	if (!transactionId) {
+		throw new Error('ID транзакции обязателен');
 	}
 };
 
 export const updateTransaction = async (transactionId, transactionData) => {
-	try {
-		const token = getToken();
+	validateTransactionId(transactionId);
+	const headers = getAuthHeaders();
 
-		if (!token) {
-			throw new Error('Токен авторизации не найден');
-		}
-
-		if (!transactionId) {
-			throw new Error('ID транзакции обязателен');
-		}
-
-		const response = await axios.patch(
-			`${BASE_URL}/transactions/${transactionId}`,
-			transactionData,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-					'Content-Type': '',
-				},
-			},
-		);
-
-		return response.data;
-	} catch (error) {
-		throw new Error(error.response?.data?.message || error.message);
-	}
+	const response = await axios.patch(
+		`${BASE_URL}/transactions/${transactionId}`,
+		transactionData,
+		{ headers },
+	);
+	return response.data;
 };
 
 export const deleteTransaction = async (transactionId) => {
-	try {
-		const token = getToken();
+	validateTransactionId(transactionId);
+	const headers = getAuthHeaders();
 
-		if (!token) {
-			throw new Error('Токен авторизации не найден');
-		}
+	const response = await axios.delete(
+		`${BASE_URL}/transactions/${transactionId}`,
+		{ headers },
+	);
+	return response.data;
+};
 
-		if (!transactionId) {
-			throw new Error('ID транзакции обязателен');
-		}
-
-		const response = await axios.delete(
-			`${BASE_URL}/transactions/${transactionId}`,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-					'Content-Type': '',
-				},
-			},
-		);
-
-		return response.data;
-	} catch (error) {
-		throw new Error(error.response?.data?.message || error.message);
+const validateTransactionIds = (transactionIds) => {
+	if (!Array.isArray(transactionIds) || transactionIds.length === 0) {
+		throw new Error('Массив ID транзакций обязателен');
 	}
 };
 
-// Batch операции для объединения нескольких запросов
+const createDeleteRequest = (transactionId, headers) => {
+	return axios.delete(`${BASE_URL}/transactions/${transactionId}`, { headers });
+};
+
+const formatBatchResult = (result, id) => ({
+	id,
+	success: result.status === 'fulfilled',
+	error:
+		result.status === 'rejected'
+			? result.reason?.response?.data?.message || result.reason.message
+			: null,
+});
+
 export const batchDeleteTransactions = async (transactionIds) => {
-	try {
-		const token = getToken();
+	validateTransactionIds(transactionIds);
+	const headers = getAuthHeaders();
 
-		if (!token) {
-			throw new Error('Токен авторизации не найден');
-		}
+	const deletePromises = transactionIds.map((id) =>
+		createDeleteRequest(id, headers),
+	);
 
-		if (!Array.isArray(transactionIds) || transactionIds.length === 0) {
-			throw new Error('Массив ID транзакций обязателен');
-		}
+	const responses = await Promise.allSettled(deletePromises);
 
-		// Выполняем удаления параллельно
-		const deletePromises = transactionIds.map(id =>
-			axios.delete(`${BASE_URL}/transactions/${id}`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-					'Content-Type': '',
-				},
-			})
-		);
+	return responses.map((result, index) =>
+		formatBatchResult(result, transactionIds[index]),
+	);
+};
 
-		const responses = await Promise.allSettled(deletePromises);
-
-		// Обрабатываем результаты
-		const results = responses.map((result, index) => ({
-			id: transactionIds[index],
-			success: result.status === 'fulfilled',
-			error: result.status === 'rejected' ? result.reason?.response?.data?.message || result.reason.message : null,
-		}));
-
-		return results;
-	} catch (error) {
-		throw new Error(error.response?.data?.message || error.message);
+const validateBatchUpdates = (updates) => {
+	if (!Array.isArray(updates) || updates.length === 0) {
+		throw new Error('Массив обновлений обязателен');
 	}
 };
+
+const createUpdateRequest = (transactionId, data, headers) => {
+	return axios.patch(`${BASE_URL}/transactions/${transactionId}`, data, {
+		headers,
+	});
+};
+
+const formatBatchUpdateResult = (result, updateItem) => ({
+	id: updateItem.id,
+	success: result.status === 'fulfilled',
+	data: result.status === 'fulfilled' ? result.value.data : null,
+	error:
+		result.status === 'rejected'
+			? result.reason?.response?.data?.message || result.reason.message
+			: null,
+});
 
 export const batchUpdateTransactions = async (updates) => {
-	try {
-		const token = getToken();
+	validateBatchUpdates(updates);
+	const headers = getAuthHeaders();
 
-		if (!token) {
-			throw new Error('Токен авторизации не найден');
-		}
+	const updatePromises = updates.map(({ id, data }) =>
+		createUpdateRequest(id, data, headers),
+	);
 
-		if (!Array.isArray(updates) || updates.length === 0) {
-			throw new Error('Массив обновлений обязателен');
-		}
+	const responses = await Promise.allSettled(updatePromises);
 
-		// Выполняем обновления параллельно
-		const updatePromises = updates.map(({ id, data }) =>
-			axios.patch(`${BASE_URL}/transactions/${id}`, data, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-					'Content-Type': '',
-				},
-			})
-		);
-
-		const responses = await Promise.allSettled(updatePromises);
-
-		// Обрабатываем результаты
-		const results = responses.map((result, index) => ({
-			id: updates[index].id,
-			success: result.status === 'fulfilled',
-			data: result.status === 'fulfilled' ? result.value.data : null,
-			error: result.status === 'rejected' ? result.reason?.response?.data?.message || result.reason.message : null,
-		}));
-
-		return results;
-	} catch (error) {
-		throw new Error(error.response?.data?.message || error.message);
-	}
+	return responses.map((result, index) =>
+		formatBatchUpdateResult(result, updates[index]),
+	);
 };
 
 export const expensesApi = {

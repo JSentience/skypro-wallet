@@ -5,7 +5,6 @@ import * as S from './NewExpense.styled';
 import { createTransaction, updateTransaction } from '../../api/expensesApi';
 import { breakpoints } from '../../breakpoints';
 
-// Маппинг категорий с русскими названиями на английские
 const CATEGORY_MAPPING = {
 	Еда: 'food',
 	Транспорт: 'transport',
@@ -15,7 +14,6 @@ const CATEGORY_MAPPING = {
 	Другое: 'others',
 };
 
-// Обратный маппинг для отображения
 const REVERSE_CATEGORY_MAPPING = {
 	food: 'Еда',
 	transport: 'Транспорт',
@@ -82,7 +80,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	const formatSumForDisplay = (sumString) => {
 		if (!sumString) return '';
 
-		// Убираем все нецифровые символы (кроме точек для десятичных, но у нас целые числа)
+		// Убираем все не цифровые символы (кроме точек для десятичных, но у нас целые числа)
 		const numbers = sumString.replace(/\D/g, '');
 
 		if (!numbers) return '';
@@ -101,7 +99,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 
 	// Функция для применения маски суммы при вводе
 	const applySumMask = (value) => {
-		// Удаляем все нецифровые символы
+		// Удаляем все не цифровые символы
 		let numbers = value.replace(/\D/g, '');
 
 		// Ограничиваем максимальную длину (например, 9 цифр = 999 999 999)
@@ -164,7 +162,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 
 	// Функция для применения маски даты дд.мм.гггг
 	const applyDateMask = (value) => {
-		// Удаляем все нецифровые символы
+		// Удаляем все не цифровые символы
 		let numbers = value.replace(/\D/g, '');
 
 		// Ограничиваем длину
@@ -361,6 +359,16 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 		navigate('/expenses');
 	};
 
+	// Проверка заполненности всех полей формы
+	const isFormValid = () => {
+		return (
+			formData.description.trim() !== '' &&
+			formData.category !== '' &&
+			formData.date !== '' &&
+			formData.sum !== ''
+		);
+	};
+
 	const categories = [
 		{ name: 'Еда', icon: '/bag.svg' },
 		{ name: 'Транспорт', icon: '/car.svg' },
@@ -371,7 +379,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	];
 
 	return (
-		<div>
+		<>
 			<S.Container>
 				<S.Content>
 					<S.TitleContainer>
@@ -469,7 +477,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 					</S.InputGroup>
 
 					<S.ButtonContainer>
-						<S.Button onClick={handleSave} disabled={loading}>
+						<S.Button onClick={handleSave} disabled={loading || !isFormValid()}>
 							<S.ButtonText>
 								{loading
 									? 'Сохранение...'
@@ -481,8 +489,6 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 					</S.ButtonContainer>
 				</S.Content>
 			</S.Container>
-		</div>
+		</>
 	);
 };
-
-export default NewExpense;

@@ -91,20 +91,11 @@ export const ExpensesLayout = () => {
 
 	return (
 		<>
-			{isMobile ? '' : <S.PageTitle>Мои расходы</S.PageTitle>}
+			<S.ExpensesWrapper>
+				{isMobile ? '' : <S.PageTitle>Мои расходы</S.PageTitle>}
 
-			{isMobile ? (
-				// Мобильная версия: только таблица
-				<ExpenseTable
-					transactions={transactions}
-					onEdit={handleEdit}
-					onTransactionUpdate={handleTransactionUpdate}
-					filters={filters}
-					onFiltersChange={handleFiltersChange}
-				/>
-			) : (
-				// Десктопная версия: таблица + форма
-				<S.MainContent>
+				{isMobile ? (
+					// Мобильная версия: только таблица
 					<ExpenseTable
 						transactions={transactions}
 						onEdit={handleEdit}
@@ -112,13 +103,24 @@ export const ExpensesLayout = () => {
 						filters={filters}
 						onFiltersChange={handleFiltersChange}
 					/>
-					<NewExpense
-						isEditing={isEditing}
-						editingExpense={editingExpense}
-						onSave={handleSave}
-					/>
-				</S.MainContent>
-			)}
+				) : (
+					// Десктопная версия: таблица + форма
+					<S.MainContent>
+						<ExpenseTable
+							transactions={transactions}
+							onEdit={handleEdit}
+							onTransactionUpdate={handleTransactionUpdate}
+							filters={filters}
+							onFiltersChange={handleFiltersChange}
+						/>
+						<NewExpense
+							isEditing={isEditing}
+							editingExpense={editingExpense}
+							onSave={handleSave}
+						/>
+					</S.MainContent>
+				)}
+			</S.ExpensesWrapper>
 		</>
 	);
 };

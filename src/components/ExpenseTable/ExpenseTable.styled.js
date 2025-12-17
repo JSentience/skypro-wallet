@@ -219,6 +219,9 @@ export const TableContent = styled.div`
 
 export const ButtonWrapper = styled.div`
 	background: #ffffff;
+	box-shadow: 0 -20px 67px -12px rgba(0, 0, 0, 0.13);
+	position: fixed;
+	bottom: 0;
 	display: flex;
 	width: 375px;
 	padding: 24px 16px;

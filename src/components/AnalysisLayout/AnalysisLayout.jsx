@@ -7,14 +7,11 @@ import { useAuth } from '../../hooks/useAuth';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 export const AnalysisLayout = () => {
-	const { user, isAuthenticated } = useAuth();
+	const { isAuthenticated } = useAuth();
 
 	const isMobile = useMediaQuery('(max-width: 549px)');
 
 	const [showCalendarOnMobile, setShowCalendarOnMobile] = useState(false);
-
-	console.log('📱 Мобильная версия:', isMobile);
-	console.log('📅 Показывать календарь на мобилке:', showCalendarOnMobile);
 
 	const [selectedRange, setSelectedRange] = useState({
 		start: null,
@@ -49,7 +46,6 @@ export const AnalysisLayout = () => {
 							width="14.000000"
 							height="14.000000"
 							fill="none"
-							customframe="#000000"
 						>
 							<g id="vuesax/bold/arrow-left">
 								<g id="arrow-left">

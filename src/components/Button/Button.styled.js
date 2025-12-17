@@ -16,6 +16,11 @@ export const Button = styled.button`
 	border-radius: 6px;
 	background: #1fa46c;
 	max-width: 100%;
+	border: none;
+	cursor: pointer;
 
-	${(props) => (props.disabled ? 'opacity: 0.5;' : '')}
+	&:disabled {
+		background-color: #999;
+		cursor: not-allowed;
+	}
 `;
