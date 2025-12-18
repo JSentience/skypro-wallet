@@ -9,6 +9,22 @@ export const HistogramBlock = styled.div`
 	background: rgba(255, 255, 255, 1);
 	padding: 32px 32px 32px 32px;
 	gap: 21px;
+
+	@media (max-width: 549px) {
+		grid-column-start: unset;
+		grid-column-end: unset;
+		width: 100%;
+		border-radius: 0;
+		box-shadow: none;
+		background: none;
+		padding: 20px 0 0 0;
+		margin: 0;
+		gap: 0;
+		height: auto;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
 `;
 
 export const HistogramHead = styled.div`
@@ -57,11 +73,20 @@ export const HistogramMainContent = styled.div`
 	justify-content: space-between;
 	align-items: flex-end;
 	min-height: 300px;
-
-	@media (max-width: 1024px) {
+	@media (max-width: 1439px) {
 		gap: 20px;
+	}
+	@media (max-width: 1024px) {
 		height: 250px;
 		min-height: 250px;
+	}
+	@media (max-width: 1023px) {
+		height: 450px;
+	}
+	@media (max-width: 549px) {
+		height: 300px;
+		min-height: 250px;
+		gap: 6px;
 	}
 `;
 
@@ -72,6 +97,11 @@ export const ColumnAndExpenses = styled.div`
 	justify-content: flex-end;
 	align-items: center;
 	height: 100%;
+	width: 100%;
+
+	@media (max-width: 549px) {
+		gap: 6px;
+	}
 `;
 
 export const ColumnSumm = styled.p`
@@ -81,6 +111,9 @@ export const ColumnSumm = styled.p`
 	line-height: 20px;
 	letter-spacing: 0px;
 	text-align: center;
+	@media (1025px <= width <= 1439px) {
+		font-size: 13px;
+	}
 	@media (max-width: 1024px) {
 		font-size: 12px;
 	}
@@ -93,6 +126,13 @@ export const ColumnGraphicksFood = styled.div`
 	transition: height 0.3s ease;
 	background: rgba(217, 182, 255, 1);
 	min-height: 20px;
+
+	@media (max-width: 549px) {
+		width: 52px;
+		min-width: 52px;
+		max-width: 52px;
+		border-radius: 6px;
+	}
 `;
 
 export const ColumnGraphicksTransport = styled(ColumnGraphicksFood)`
@@ -128,6 +168,38 @@ export const ColumnTitle = styled.p`
 	letter-spacing: 0px;
 	text-align: center;
 	margin-top: 8px;
+
+	/* Базовые стили для всех */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 100%;
+
+	/* Десктоп */
+	max-width: 94px;
+
+	@media (1025px <= width <= 1439px) {
+		max-width: 80px;
+		font-size: 11px;
+	}
+
+	@media (max-width: 1024px) {
+		max-width: 70px;
+		font-size: 10px;
+	}
+
+	@media (max-width: 1023px) {
+		max-width: 90px;
+	}
+
+	@media (max-width: 549px) {
+		max-width: 52px;
+		font-size: 10px;
+		line-height: 12px;
+
+		padding: 0 2px;
+		box-sizing: border-box;
+	}
 `;
 
 export const LoadingText = styled.div`

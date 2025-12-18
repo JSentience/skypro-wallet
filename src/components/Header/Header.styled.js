@@ -11,10 +11,16 @@ export const HeaderStyled = styled.header`
 	background: #fff;
 	padding-left: calc(50% - 41%);
 	padding-right: calc(50% - 41%);
+	@media (1025px <= width <= 1439px) {
+		padding-left: calc(50% - 43%);
+		padding-right: calc(50% - 43%);
+	}
 
 	@media (max-width: ${breakpoints.mobile}) {
+		width: 100%;
 		padding-left: 0;
 		padding-right: 0;
+		background: rgba(244, 245, 246, 1);
 	}
 `;
 export const HeaderWrapper = styled.div`
@@ -30,7 +36,7 @@ export const HeaderWrapper = styled.div`
 		padding: 0 10px;
 		height: 54px;
 		flex-direction: row;
-		justify-content: space-between;
+		/* justify-content: space-between; */
 	}
 `;
 export const ExitLinkA = styled.a`
@@ -70,6 +76,7 @@ export const RightContainer = styled.div`
 	gap: 20px;
 	align-items: center;
 `;
+// noinspection CssNonIntegerLengthInPixels
 export const MobileMenu = styled.div`
 	position: absolute;
 	display: inline-flex;

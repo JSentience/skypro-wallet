@@ -1,15 +1,25 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ExpenseTable } from '../ExpenseTable/ExpenseTable';
 import { NewExpense } from '../NewExpense/NewExpense';
 import { getTransactions } from '../../api/expensesApi';
+import { useTransactions } from '../../hooks/useTransactions';
 import * as S from './ExpensesLayout.styled';
+import { useMediaQuery } from 'react-responsive';
+import { breakpoints } from '../../breakpoints';
 
 export const ExpensesLayout = () => {
-	const [transactions, setTransactions] = useState([]);
+	const {
+		transactions,
+		setAllTransactions,
+		setLoading,
+		setError,
+		loading,
+		error,
+	} = useTransactions();
+
 	const [isEditing, setIsEditing] = useState(false);
 	const [editingExpense, setEditingExpense] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
 
 	// Состояния для фильтров
 	const [filters, setFilters] = useState({
@@ -36,14 +46,14 @@ export const ExpensesLayout = () => {
 			setError(null);
 
 			const data = await getTransactions(apiFilters);
-			setTransactions(Array.isArray(data) ? data : []);
+			setAllTransactions(data);
 		} catch {
 			setError('Не удалось загрузить транзакции');
-			setTransactions([]);
+			setAllTransactions([]);
 		} finally {
 			setLoading(false);
 		}
-	}, [apiFilters]);
+	}, [apiFilters, setAllTransactions, setLoading, setError]);
 
 	useEffect(() => {
 		fetchTransactions();
@@ -54,15 +64,11 @@ export const ExpensesLayout = () => {
 		setEditingExpense(expense);
 	}, []);
 
-	const handleSave = useCallback(async () => {
-		await fetchTransactions();
+	const handleSave = useCallback(() => {
+		// Больше не нужен GET запрос - контекст уже обновлен
 		setIsEditing(false);
 		setEditingExpense(null);
-	}, [fetchTransactions]);
-
-	const handleTransactionUpdate = useCallback(async () => {
-		await fetchTransactions();
-	}, [fetchTransactions]);
+	}, []);
 
 	const handleFiltersChange = useCallback((newFilters) => {
 		setFilters(newFilters);
@@ -70,39 +76,52 @@ export const ExpensesLayout = () => {
 
 	if (loading) {
 		return (
-			<div>
+			<>
 				<S.PageTitle>Мои расходы</S.PageTitle>
 				<S.LoadingText>Загрузка транзакций...</S.LoadingText>
-			</div>
+			</>
 		);
 	}
 
 	if (error) {
 		return (
-			<div>
+			<>
 				<S.PageTitle>Мои расходы</S.PageTitle>
 				<S.ErrorText>{error}</S.ErrorText>
-			</div>
+			</>
 		);
 	}
 
 	return (
-		<div>
-			<S.PageTitle>Мои расходы</S.PageTitle>
-			<S.MainContent>
-				<ExpenseTable
-					transactions={transactions}
-					onEdit={handleEdit}
-					onTransactionUpdate={handleTransactionUpdate}
-					filters={filters}
-					onFiltersChange={handleFiltersChange}
-				/>
-				<NewExpense
-					isEditing={isEditing}
-					editingExpense={editingExpense}
-					onSave={handleSave}
-				/>
-			</S.MainContent>
-		</div>
+		<>
+			<S.ExpensesWrapper>
+				{isMobile ? '' : <S.PageTitle>Мои расходы</S.PageTitle>}
+
+				{isMobile ? (
+					// Мобильная версия: только таблица
+					<ExpenseTable
+						transactions={transactions}
+						onEdit={handleEdit}
+						filters={filters}
+						onFiltersChange={handleFiltersChange}
+					/>
+				) : (
+					// Десктопная версия: таблица + форма
+					<S.MainContent>
+						<ExpenseTable
+							transactions={transactions}
+							onEdit={handleEdit}
+							filters={filters}
+							onFiltersChange={handleFiltersChange}
+						/>
+						<NewExpense
+							isEditing={isEditing}
+							editingExpense={editingExpense}
+							onSave={handleSave}
+						/>
+					</S.MainContent>
+				)}
+			</S.ExpensesWrapper>
+		</>
 	);
 };

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { breakpoints } from '../../breakpoints';
 
 export const FilterContainer = styled.div`
 	position: absolute;
@@ -10,8 +11,18 @@ export const FilterContainer = styled.div`
 	box-sizing: border-box;
 	border: 0.5px solid #999999;
 	border-radius: 6px;
-	box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
+	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background-color: white;
+	z-index: 10;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		position: absolute;
+		left: 0;
+		top: calc(100% + 4px);
+		width: 176px;
+		height: auto;
+		padding: 12px;
+	}
 `;
 
 export const FilterContent = styled.div`
@@ -21,6 +32,11 @@ export const FilterContent = styled.div`
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 6px;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: 152px;
+		height: auto;
+	}
 `;
 
 export const CategoryItem = styled.div`
@@ -55,4 +71,9 @@ export const CategoryText = styled.p`
 	text-align: center;
 	margin-left: 12px;
 	transition: color 0.2s ease;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 10px;
+		line-height: 12px;
+	}
 `;
