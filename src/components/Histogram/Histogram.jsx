@@ -60,7 +60,13 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 	if (!dateRange.start || !dateRange.end) {
 		return (
 			<S.HistogramBlock>
-				<S.PlaceholderText>Выберите период в календаре</S.PlaceholderText>
+				<S.PlaceholderText>
+					<p>Выберите период в календаре</p>
+					<p>
+						При выборе одного дня или месяца нажмите на нужный период{' '}
+						<span style={{ color: '#1fa46c', fontWeight: '600' }}>дважды</span>
+					</p>
+				</S.PlaceholderText>
 			</S.HistogramBlock>
 		);
 	}

@@ -218,6 +218,9 @@ export const PlaceholderText = styled.div`
 	text-align: center;
 	padding: 50px;
 	color: #666;
+	display: flex;
+    flex-direction: column;
+    gap: 15px;
 `;
 
 export const NoDataText = styled.div`
