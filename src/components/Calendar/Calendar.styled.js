@@ -31,6 +31,10 @@ export const ScrollContainer = styled.div`
 	/* Для Firefox */
 	scrollbar-width: thin;
 	scrollbar-color: rgba(217, 217, 217, 1) transparent;
+
+	@media (max-width: 1023px) {
+		max-height: 375px;
+	}
 `;
 
 export const CalendarBlock = styled.div`
@@ -43,9 +47,23 @@ export const CalendarBlock = styled.div`
 	background: rgba(255, 255, 255, 1);
 	position: relative;
 	overflow: hidden;
+	@media (1025px <= width <= 1439px) {
+		padding: 25px;
+	}
 
 	@media (max-width: 1024px) {
 		width: min-content;
+	}
+	@media (max-width: 1023px) {
+		width: auto;
+	}
+	@media (max-width: 549px) {
+		width: 100% !important;
+		padding: 0;
+		margin: 0 auto;
+		grid-column: unset;
+		border-radius: 0;
+		box-shadow: none;
 	}
 `;
 
@@ -63,7 +81,7 @@ export const CalendarPeriod = styled.p`
 	letter-spacing: 0px;
 	text-align: center;
 	@media (max-width: 1024px) {
-		font-size: 20px;
+		/* font-size: 20px; */
 	}
 `;
 
@@ -129,6 +147,15 @@ export const Days = styled.div`
 	grid-template-columns: repeat(7, 1fr);
 	gap: 6px;
 	width: 100%;
+	@media (1025px <= width <= 1439px) {
+		gap: 2px;
+	}
+	@media (max-width: 1023px) {
+		gap: 10px;
+	}
+	@media (max-width: 549px) {
+		gap: 6px;
+	}
 `;
 
 export const Day = styled.div`
@@ -145,9 +172,17 @@ export const Day = styled.div`
 		background: rgba(219, 255, 233, 0.8);
 	}
 
-	@media (max-width: 1024px) {
+	@media (1023px <= width <= 1439px) {
 		width: 35px;
 		height: 35px;
+	}
+	@media (max-width: 1022px) {
+		width: 50px;
+		height: 50px;
+	}
+	@media (max-width: 549px) {
+		width: 41px;
+		height: 41px;
 	}
 `;
 

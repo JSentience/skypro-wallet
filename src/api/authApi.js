@@ -7,39 +7,59 @@ const AUTH_URL = '/api/user';
 axiosRetry(axios, {
 	retries: 3,
 	retryDelay: (retryCount) => {
-		console.warn(`Повторная попытка запроса #${retryCount}`);
 		return retryCount * 1000; // Увеличивающаяся задержка
 	},
 	retryCondition: (error) => {
 		// Повторять при сетевых ошибках или 5xx статусах
-		return axiosRetry.isNetworkOrIdempotentRequestError(error) ||
-			   (error.response && error.response.status >= 500);
+		return (
+			axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+			(error.response && error.response.status >= 500)
+		);
 	},
 });
 
 export const getToken = () => localStorage.getItem('walletToken');
 
+const saveUserData = (token, name, login) => {
+	localStorage.setItem('walletToken', token);
+	localStorage.setItem('userName', name);
+	localStorage.setItem('userLogin', login);
+};
+
 export const login = async (login, password) => {
 	try {
 		const response = await axios.post(
 			`${AUTH_URL}/login`,
-			{
-				login,
-				password,
-			},
-			{
-				headers: { 'Content-Type': null },
-			},
+			{ login, password },
+			{ headers: { 'Content-Type': null } },
 		);
+
 		const { token, name, login: userLogin } = response.data.user;
-		console.log('Login response:', response.data);
-		localStorage.setItem('walletToken', token);
-		localStorage.setItem('userName', name);
-		localStorage.setItem('userLogin', userLogin);
+		saveUserData(token, name, userLogin);
+
 		return response.data;
 	} catch (error) {
-		console.error('Login error:', error);
-		throw new Error(error.response?.data?.message || error.message);
+		if (error.response) {
+			// Сервер вернул ответ с ошибкой
+			switch (error.response.status) {
+				case 400:
+					throw new Error('Неверный логин или пароль');
+				case 401:
+					throw new Error('Неверный логин или пароль');
+				case 404:
+					throw new Error('Пользователь не найден');
+				case 500:
+					throw new Error('Ошибка сервера. Попробуйте позже');
+				default:
+					throw new Error('Ошибка авторизации. Попробуйте снова');
+			}
+		} else if (error.request) {
+			// Запрос был отправлен, но ответа не получено
+			throw new Error('Нет соединения с сервером');
+		} else {
+			// Произошла ошибка при настройке запроса
+			throw new Error('Ошибка при отправке запроса');
+		}
 	}
 };
 
@@ -47,42 +67,33 @@ export const register = async (name, login, password) => {
 	try {
 		const response = await axios.post(
 			AUTH_URL,
-			{
-				name,
-				login,
-				password,
-			},
-			{
-				headers: { 'Content-Type': null },
-			},
+			{ name, login, password },
+			{ headers: { 'Content-Type': null } },
 		);
+
 		const { token, name: userName, login: userLogin } = response.data.user;
-		console.log('Register response:', response.data);
-		localStorage.setItem('walletToken', token);
-		localStorage.setItem('userName', userName);
-		localStorage.setItem('userLogin', userLogin);
+		saveUserData(token, userName, userLogin);
+
 		return response.data;
 	} catch (error) {
-		console.error('Registration error:', error);
-		console.error('Response data:', error.response?.data);
-		throw new Error(error.response?.data?.message || error.message);
+		if (error.response) {
+			// Сервер вернул ответ с ошибкой
+			switch (error.response.status) {
+				case 400:
+					throw new Error('Некорректные данные. Проверьте введённые значения');
+				case 409:
+					throw new Error('Пользователь с таким email уже существует');
+				case 500:
+					throw new Error('Ошибка сервера. Попробуйте позже');
+				default:
+					throw new Error('Ошибка регистрации. Попробуйте снова');
+			}
+		} else if (error.request) {
+			// Запрос был отправлен, но ответа не получено
+			throw new Error('Нет соединения с сервером');
+		} else {
+			// Произошла ошибка при настройке запроса
+			throw new Error('Ошибка при отправке запроса');
+		}
 	}
 };
-
-// export const authRequest = async (config) => {
-// 	const token = getToken();
-// 	if (!token) throw new Error('Требуется авторизация');
-//
-// 	try {
-// 		const response = await axios({
-// 			...config,
-// 			headers: {
-// 				Authorization: `Bearer ${token}`,
-// 				...config.headers,
-// 			},
-// 		});
-// 		return response.data;
-// 	} catch (error) {
-// 		throw new Error(error.response?.data?.message || 'Ошибка запроса');
-// 	}
-// };

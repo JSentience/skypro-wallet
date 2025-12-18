@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { breakpoints } from '../../breakpoints';
 
 export const FilterContainer = styled.div`
 	width: 106px;
@@ -10,8 +11,19 @@ export const FilterContainer = styled.div`
 	box-sizing: border-box;
 	border: 0.5px solid #999999;
 	border-radius: 6px;
-	box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
+	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
 	background-color: white;
+	z-index: 10;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		position: absolute;
+		left: 0;
+		top: calc(100% + 4px);
+		width: auto;
+		min-width: 87px;
+		height: auto;
+		padding: 10px;
+	}
 `;
 
 export const FilterContent = styled.div`
@@ -21,6 +33,11 @@ export const FilterContent = styled.div`
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 6px;
+
+	@media (max-width: ${breakpoints.mobile}) {
+		width: auto;
+		height: auto;
+	}
 `;
 
 export const FilterItem = styled.div`
@@ -34,6 +51,12 @@ export const FilterItem = styled.div`
 	&:hover {
 		background-color: ${(props) => (props.$active ? '#dbffe9' : '#e8f5ee')};
 	}
+	@media (max-width: ${breakpoints.mobile}) {
+		display: flex;
+		padding: 7px 10px;
+		align-items: center;
+		gap: 6px;
+	}
 `;
 
 export const FilterText = styled.p`
@@ -44,4 +67,7 @@ export const FilterText = styled.p`
 	line-height: 15px;
 	text-align: center;
 	transition: color 0.2s ease;
+	@media (max-width: ${breakpoints.mobile}) {
+		font-size: 10px;
+	}
 `;

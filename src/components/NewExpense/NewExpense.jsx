@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 import * as S from './NewExpense.styled';
 import { createTransaction, updateTransaction } from '../../api/expensesApi';
+import { breakpoints } from '../../breakpoints';
 
-// Маппинг категорий с русскими названиями на английские
 const CATEGORY_MAPPING = {
 	Еда: 'food',
 	Транспорт: 'transport',
@@ -12,7 +14,6 @@ const CATEGORY_MAPPING = {
 	Другое: 'others',
 };
 
-// Обратный маппинг для отображения
 const REVERSE_CATEGORY_MAPPING = {
 	food: 'Еда',
 	transport: 'Транспорт',
@@ -23,6 +24,9 @@ const REVERSE_CATEGORY_MAPPING = {
 };
 
 export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
+	const navigate = useNavigate();
+	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
+
 	const [formData, setFormData] = useState({
 		description: '',
 		category: '',
@@ -76,7 +80,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	const formatSumForDisplay = (sumString) => {
 		if (!sumString) return '';
 
-		// Убираем все нецифровые символы (кроме точек для десятичных, но у нас целые числа)
+		// Убираем все не цифровые символы (кроме точек для десятичных, но у нас целые числа)
 		const numbers = sumString.replace(/\D/g, '');
 
 		if (!numbers) return '';
@@ -95,7 +99,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 
 	// Функция для применения маски суммы при вводе
 	const applySumMask = (value) => {
-		// Удаляем все нецифровые символы
+		// Удаляем все не цифровые символы
 		let numbers = value.replace(/\D/g, '');
 
 		// Ограничиваем максимальную длину (например, 9 цифр = 999 999 999)
@@ -158,7 +162,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 
 	// Функция для применения маски даты дд.мм.гггг
 	const applyDateMask = (value) => {
-		// Удаляем все нецифровые символы
+		// Удаляем все не цифровые символы
 		let numbers = value.replace(/\D/g, '');
 
 		// Ограничиваем длину
@@ -351,6 +355,20 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 		}
 	};
 
+	const handleBackClick = () => {
+		navigate('/expenses');
+	};
+
+	// Проверка заполненности всех полей формы
+	const isFormValid = () => {
+		return (
+			formData.description.trim() !== '' &&
+			formData.category !== '' &&
+			formData.date !== '' &&
+			formData.sum !== ''
+		);
+	};
+
 	const categories = [
 		{ name: 'Еда', icon: '/bag.svg' },
 		{ name: 'Транспорт', icon: '/car.svg' },
@@ -361,10 +379,29 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	];
 
 	return (
-		<div>
+		<>
 			<S.Container>
 				<S.Content>
-					<S.Title>{isEditing ? 'Редактирование' : 'Новый расход'}</S.Title>
+					<S.TitleContainer>
+						{isMobile && (
+							<S.BackButton onClick={handleBackClick}>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="14"
+									height="14"
+									viewBox="0 0 14 14"
+									fill="none"
+								>
+									<path
+										d="M9.44413 1.16675H4.55579C2.43246 1.16675 1.16663 2.43258 1.16663 4.55591V9.43841C1.16663 11.5676 2.43246 12.8334 4.55579 12.8334H9.43829C11.5616 12.8334 12.8275 11.5676 12.8275 9.44425V4.55591C12.8333 2.43258 11.5675 1.16675 9.44413 1.16675ZM10.5 7.43758H4.55579L6.31163 9.19341C6.48079 9.36258 6.48079 9.64258 6.31163 9.81175C6.22413 9.89925 6.11329 9.94008 6.00246 9.94008C5.89163 9.94008 5.78079 9.89925 5.69329 9.81175L3.19079 7.30925C3.10913 7.22758 3.06246 7.11675 3.06246 7.00008C3.06246 6.88341 3.10913 6.77258 3.19079 6.69091L5.69329 4.18841C5.86246 4.01925 6.14246 4.01925 6.31163 4.18841C6.48079 4.35758 6.48079 4.63758 6.31163 4.80675L4.55579 6.56258H10.5C10.7391 6.56258 10.9375 6.76091 10.9375 7.00008C10.9375 7.23925 10.7391 7.43758 10.5 7.43758Z"
+										fill="#999999"
+									/>
+								</svg>
+								Мои расходы
+							</S.BackButton>
+						)}
+						<S.Title>{isEditing ? 'Редактирование' : 'Новый расход'}</S.Title>
+					</S.TitleContainer>
 
 					{error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
@@ -440,7 +477,7 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 					</S.InputGroup>
 
 					<S.ButtonContainer>
-						<S.Button onClick={handleSave} disabled={loading}>
+						<S.Button onClick={handleSave} disabled={loading || !isFormValid()}>
 							<S.ButtonText>
 								{loading
 									? 'Сохранение...'
@@ -452,8 +489,6 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 					</S.ButtonContainer>
 				</S.Content>
 			</S.Container>
-		</div>
+		</>
 	);
 };
-
-export default NewExpense;

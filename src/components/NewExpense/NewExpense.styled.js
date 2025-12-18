@@ -1,57 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { breakpoints } from '../../breakpoints';
 
-export const Container = styled.div`
-	width: 379px;
-	height: 618px;
-	display: flex;
-	flex-direction: column;
-	border-radius: 30px;
-	box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
-	background-color: white;
-	margin-top: 32px;
-	padding: 32px 32px 32px 34px;
-	position: relative;
-`;
+const mobileQuery = `@media (max-width: ${breakpoints.mobile})`;
 
-export const Content = styled.div`
-	width: 313px;
-	height: 554px;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 24px;
-	background-color: white;
-`;
-
-export const Title = styled.h2`
-	color: #000000;
-	font-family: 'Montserrat', sans-serif;
-	font-size: 24px;
-	font-weight: 700;
-	line-height: 29px;
-	text-align: center;
-`;
-
-export const InputGroup = styled.div`
-	width: 313px;
-	height: 75px;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-`;
-
-export const InputLabel = styled.h3`
-	color: #000000;
-	font-family: 'Montserrat', sans-serif;
-	font-size: 16px;
-	font-weight: 600;
-	line-height: 20px;
-	text-align: left;
-`;
-
-export const Input = styled.input`
-	margin-top: 16px;
-	width: 313px;
+const inputStyles = css`
+	width: ${(props) => (props.$fullWidth ? '100%' : '313px')};
 	height: 39px;
 	box-sizing: border-box;
 	border: 0.5px solid
@@ -68,24 +21,138 @@ export const Input = styled.input`
 		border-color: ${(props) => (props.$error ? '#ff4444' : '#1fa46c')};
 		background-color: ${(props) => (props.$error ? '#ffebee' : '#dbffe9')};
 	}
+
+	${mobileQuery} {
+		width: 100%;
+		margin-top: 12px;
+	}
+`;
+
+export const Container = styled.div`
+	width: 379px;
+	height: 618px;
+	display: flex;
+	flex-direction: column;
+	border-radius: 30px;
+	box-shadow: 0 20px 67px -12px rgba(0, 0, 0, 0.13);
+	background-color: white;
+	padding: 32px 32px 32px 34px;
+	position: relative;
+
+	${mobileQuery} {
+		width: 100%;
+		height: auto;
+		min-height: calc(100vh - 54px);
+		border-radius: 0;
+		box-shadow: none;
+		padding: 24px 0 32px 0;
+	}
+`;
+
+export const Content = styled.div`
+	width: 313px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	${mobileQuery} {
+		width: 100%;
+		gap: 20px;
+	}
+`;
+
+export const Title = styled.h2`
+	color: #000000;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 29px;
+	text-align: center;
+
+	${mobileQuery} {
+		font-size: 20px;
+		line-height: 24px;
+		text-align: left;
+	}
+`;
+
+export const BackButton = styled.button`
+	display: none;
+
+	${mobileQuery} {
+		color: #999;
+		font-size: 12px;
+		font-weight: 600;
+		font-family: 'Montserrat', sans-serif;
+		line-height: 17px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		margin-bottom: 8px;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+`;
+
+export const TitleContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+`;
+
+export const InputGroup = styled.div`
+	width: 313px;
+	display: flex;
+	flex-direction: column;
+
+	${mobileQuery} {
+		width: 100%;
+	}
+`;
+
+export const InputLabel = styled.h3`
+	color: #000000;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 20px;
+
+	${mobileQuery} {
+		font-size: 14px;
+		line-height: 17px;
+	}
+`;
+
+export const Input = styled.input`
+	${inputStyles};
+	margin-top: 16px;
 `;
 
 export const CategorySection = styled.div`
 	width: 313px;
-	height: 141px;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
+
+	${mobileQuery} {
+		width: 100%;
+	}
 `;
 
 export const CategoryGrid = styled.div`
-	width: 277px;
-	height: 105px;
 	display: flex;
 	flex-wrap: wrap;
-	align-items: flex-start;
 	gap: 6px;
 	margin-top: 16px;
+
+	${mobileQuery} {
+		margin-top: 12px;
+	}
 `;
 
 export const CategoryItem = styled.div`
@@ -94,7 +161,7 @@ export const CategoryItem = styled.div`
 	background-color: ${(props) => (props.$active ? '#dbffe9' : '#f3f4f6')};
 	padding: 8px 20px;
 	cursor: pointer;
-	transition: all 0.2s ease;
+	transition: background-color 0.2s ease;
 
 	&:hover {
 		background-color: ${(props) => (props.$active ? '#dbffe9' : '#e8f5ee')};
@@ -117,7 +184,6 @@ export const CategoryText = styled.p`
 	font-size: 12px;
 	font-weight: 400;
 	line-height: 15px;
-	text-align: center;
 	margin-left: 12px;
 	transition: color 0.2s ease;
 `;
@@ -132,8 +198,13 @@ export const Button = styled.button`
 	cursor: pointer;
 
 	&:disabled {
-		background-color: #cccccc;
+		background-color: #999;
 		cursor: not-allowed;
+	}
+
+	${mobileQuery} {
+		width: 100%;
+		max-width: 373px;
 	}
 `;
 
@@ -157,11 +228,29 @@ export const ErrorMessage = styled.div`
 	border-radius: 4px;
 	border: 1px solid #ffcdd2;
 	z-index: 10;
+
+	${mobileQuery} {
+		top: 60px;
+		left: 16px;
+		right: 16px;
+	}
 `;
 
 export const ButtonContainer = styled.div`
+	width: 100%;
 	display: flex;
 	gap: 12px;
+
+	${mobileQuery} {
+		background: #ffffff;
+		box-shadow: 0 -20px 67px -12px rgba(0, 0, 0, 0.13);
+		position: fixed;
+		bottom: 0;
+		padding: 24px 16px;
+		left: clamp(0px, -57.14px + 15.24vw, 16px);
+		justify-content: center;
+		align-items: center;
+	}
 `;
 
 export const FieldError = styled.div`

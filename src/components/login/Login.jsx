@@ -1,10 +1,11 @@
-import { useAuth } from '../../hooks/useAuth';
+import { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { login, register } from '../../api/authApi';
 import { Container } from '../../Container.styled.js';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import * as S from './Login.styled';
+import { useAuth } from '../../hooks/useAuth';
 import { MainButton } from '../Button/Button';
+import * as S from './Login.styled';
 
 export const Login = () => {
 	const { login: authLogin } = useAuth();
@@ -15,6 +16,8 @@ export const Login = () => {
 	const [name, setName] = useState('');
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+
+	const isMobile = useMediaQuery({ maxWidth: 480 });
 
 	const isSignIn = location.pathname === '/signin';
 
@@ -41,9 +44,6 @@ export const Login = () => {
 				response = await register(trimmedName, trimmedLogin, trimmedPassword);
 			}
 			authLogin(response.user);
-			setSuccess(
-				isSignIn ? 'Вход выполнен успешно!' : 'Регистрация выполнена успешно!',
-			);
 			navigate('/');
 		} catch (err) {
 			setError(err.message);
@@ -54,12 +54,22 @@ export const Login = () => {
 		navigate(isSignIn ? '/signup' : '/signin');
 	};
 
+	// Проверка заполненности всех обязательных полей
+	const isFormValid = () => {
+		const hasLoginAndPassword =
+			loginValue.trim() !== '' && password.trim() !== '';
+		if (isSignIn) {
+			return hasLoginAndPassword;
+		}
+		return hasLoginAndPassword && name.trim() !== '';
+	};
+
 	return (
 		<>
-			<S.Wrapper>
-				<Container>
-					<S.LoginContainer>
-						<S.LoginWrapper>
+			<S.Wrapper $isMobile={isMobile}>
+				{isMobile ? (
+					<S.LoginContainer $isMobile={isMobile}>
+						<S.LoginWrapper $isMobile={isMobile}>
 							<S.LoginTitle>{isSignIn ? 'Вход' : 'Регистрация'}</S.LoginTitle>
 							{error && <S.ErrorStyle>{error}</S.ErrorStyle>}
 							{success && <S.SuccessStyle>{success}</S.SuccessStyle>}
@@ -74,7 +84,7 @@ export const Login = () => {
 								)}
 								<S.InputEmail
 									type="text"
-									placeholder="Почта"
+									placeholder="Эл. почта"
 									value={loginValue}
 									onChange={(e) => setLoginValue(e.target.value)}
 								/>
@@ -85,7 +95,11 @@ export const Login = () => {
 									onChange={(e) => setPassword(e.target.value)}
 								/>
 							</S.InputForm>
-							<MainButton type="submit" onClick={handleSubmit}>
+							<MainButton
+								type="submit"
+								onClick={handleSubmit}
+								disabled={!isFormValid()}
+							>
 								{isSignIn ? 'Войти' : 'Зарегистрироваться'}
 							</MainButton>
 							<S.ChangeForm>
@@ -98,7 +112,56 @@ export const Login = () => {
 							</S.ChangeForm>
 						</S.LoginWrapper>
 					</S.LoginContainer>
-				</Container>
+				) : (
+					<Container>
+						<S.LoginContainer $isMobile={isMobile}>
+							<S.LoginWrapper $isMobile={isMobile}>
+								<S.LoginTitle>{isSignIn ? 'Вход' : 'Регистрация'}</S.LoginTitle>
+								{error && <S.ErrorStyle>{error}</S.ErrorStyle>}
+								{success && <S.SuccessStyle>{success}</S.SuccessStyle>}
+								<S.InputForm>
+									{!isSignIn && (
+										<S.InputName
+											type="text"
+											placeholder="Имя"
+											value={name}
+											onChange={(e) => setName(e.target.value)}
+										/>
+									)}
+									<S.InputEmail
+										type="text"
+										placeholder="Эл. почта"
+										value={loginValue}
+										onChange={(e) => setLoginValue(e.target.value)}
+									/>
+									<S.InputPassword
+										type="password"
+										placeholder="Пароль"
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+									/>
+								</S.InputForm>
+								<MainButton
+									type="submit"
+									onClick={handleSubmit}
+									disabled={!isFormValid()}
+								>
+									{isSignIn ? 'Войти' : 'Зарегистрироваться'}
+								</MainButton>
+								<S.ChangeForm>
+									<S.ChangeFormText>
+										{isSignIn
+											? 'Нужно зарегистрироваться?'
+											: 'Уже есть аккаунт?'}
+									</S.ChangeFormText>
+									<S.ChangeFormLink onClick={handleSwitchForm}>
+										{isSignIn ? 'Регистрируйтесь здесь' : 'Войдите здесь'}
+									</S.ChangeFormLink>
+								</S.ChangeForm>
+							</S.LoginWrapper>
+						</S.LoginContainer>
+					</Container>
+				)}
 			</S.Wrapper>
 		</>
 	);
