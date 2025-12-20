@@ -1,7 +1,7 @@
 import React from 'react';
 import { NewExpense } from '../components/NewExpense/NewExpense';
 import { useMediaQuery } from 'react-responsive';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { breakpoints } from '../breakpoints';
 import styled from 'styled-components';
 
@@ -18,18 +18,30 @@ const PageContainer = styled.div`
 	}
 `;
 
-export const NewExpensePage = () => {
+export const EditExpensePage = () => {
 	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
 	const navigate = useNavigate();
+	const location = useLocation();
+	const editingExpense = location.state?.expense;
 
-	if (!isMobile) {
+	// Если не мобильная версия или нет данных о расходе, редирект на страницу расходов
+	if (!isMobile || !editingExpense) {
 		navigate('/expenses');
 		return null;
 	}
 
+	const handleSave = () => {
+		// После сохранения возвращаемся на страницу расходов
+		navigate('/expenses');
+	};
+
 	return (
 		<PageContainer>
-			<NewExpense />
+			<NewExpense
+				isEditing={true}
+				editingExpense={editingExpense}
+				onSave={handleSave}
+			/>
 		</PageContainer>
 	);
 };

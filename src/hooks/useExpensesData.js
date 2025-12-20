@@ -1,55 +1,46 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { transactionsAPI } from '../api/postApiForAnalytics';
 import { useAuth } from './useAuth';
 
-const CATEGORIES = {
-	food: 'Еда',
-	transport: 'Транспорт',
-	housing: 'Жилье',
-	joy: 'Развлечения',
-	education: 'Образование',
-	other: 'Другое',
+const createEmptyCategoryData = () => ({
+	food: 0,
+	transport: 0,
+	housing: 0,
+	joy: 0,
+	education: 0,
+	other: 0,
+	total: 0,
+});
+
+const addTransactionToCategory = (acc, transaction) => {
+	const category = transaction.category;
+	const amount = transaction.sum || 0;
+
+	if (acc[category] !== undefined) {
+		acc[category] += amount;
+	} else {
+		acc.other += amount;
+	}
+
+	acc.total += amount;
+
+	return acc;
 };
 
 const groupTransactionsByCategory = (transactions) => {
-	console.log('📊 Группируем транзакции:', transactions);
-
-	const initialData = {
-		food: 0,
-		transport: 0,
-		housing: 0,
-		joy: 0,
-		education: 0,
-		other: 0,
-		total: 0,
-	};
-
 	if (!transactions || !Array.isArray(transactions)) {
-		return initialData;
+		return createEmptyCategoryData();
 	}
 
-	const result = transactions.reduce(
-		(acc, transaction) => {
-			const category = transaction.category;
-			const amount = transaction.sum || 0;
-
-			console.log(`📊 Обрабатываем транзакцию: ${category} - ${amount} руб`);
-
-			if (acc[category] !== undefined) {
-				acc[category] += amount;
-			} else {
-				acc.other += amount;
-			}
-
-			acc.total += amount;
-
-			return acc;
-		},
-		{ ...initialData },
+	return transactions.reduce(
+		addTransactionToCategory,
+		createEmptyCategoryData(),
 	);
-
-	return result;
 };
+
+const isAbortError = (error) => error.name === 'AbortError';
+
+const shouldFetchData = (dateRange) => dateRange.start && dateRange.end;
 
 export const useExpensesData = (dateRange) => {
 	const [data, setData] = useState(null);
@@ -60,30 +51,20 @@ export const useExpensesData = (dateRange) => {
 	const abortControllerRef = useRef(null);
 
 	useEffect(() => {
-		console.log('🔁 useExpensesData эффект сработал', {
-			start: dateRange.start?.toISOString(),
-			end: dateRange.end?.toISOString(),
-			hasUser: !!user,
-		});
+		const cancelPreviousRequest = () => {
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+			}
+		};
 
-		const fetchData = async () => {
-			if (!dateRange.start || !dateRange.end) {
+		const fetchTransactionsData = async () => {
+			if (!shouldFetchData(dateRange)) {
 				setData(null);
 				return;
 			}
 
-			// Отменяем предыдущий запрос
-			if (abortControllerRef.current) {
-				abortControllerRef.current.abort();
-			}
-
-			// Создаем новый AbortController
+			cancelPreviousRequest();
 			abortControllerRef.current = new AbortController();
-
-			console.log('🔄 Начало загрузки данных для периода:', {
-				start: dateRange.start.toLocaleDateString('ru-RU'),
-				end: dateRange.end.toLocaleDateString('ru-RU'),
-			});
 
 			setLoading(true);
 			setError(null);
@@ -95,35 +76,25 @@ export const useExpensesData = (dateRange) => {
 					user?.token,
 				);
 
-				console.log('📊 Получено транзакций:', transactions?.length || 0);
-
 				const groupedData = groupTransactionsByCategory(transactions || []);
-				console.log('📈 Сгруппированные данные:', groupedData);
-
 				setData(groupedData);
 			} catch (err) {
-				// Игнорируем ошибки отмены запроса
-				if (err.name === 'AbortError') {
-					console.log('⏹️ Запрос был отменен');
+				if (isAbortError(err)) {
 					return;
 				}
 
-				console.error('💥 Ошибка при загрузке данных:', err);
 				setError(err.message);
 				setData(null);
 			} finally {
 				setLoading(false);
-				console.log('🏁 Загрузка завершена');
 			}
 		};
 
-		const timeoutId = setTimeout(fetchData, 100);
+		const timeoutId = setTimeout(fetchTransactionsData, 100);
 
 		return () => {
 			clearTimeout(timeoutId);
-			if (abortControllerRef.current) {
-				abortControllerRef.current.abort();
-			}
+			cancelPreviousRequest();
 		};
 	}, [dateRange.start, dateRange.end, user]);
 

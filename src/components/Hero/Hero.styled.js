@@ -7,8 +7,24 @@ export const MainStyled = styled.main`
 	padding-top: 64px;
 	padding-left: calc(50% - 41%);
 	padding-right: calc(50% - 41%);
+
+	@media (1025px <= width <= 1439px) {
+		padding-left: calc(50% - 43%);
+		padding-right: calc(50% - 43%);
+	}
+
 	@media (max-width: 1024px) {
-		padding-left: calc(50% - 45%);
-		padding-right: calc(50% - 45%);
+		/* padding-left: calc(50% - 45%);
+		padding-right: calc(50% - 45%); */
+		padding: 64px;
+	}
+
+	@media (max-width: 549px) {
+		//position: relative;
+		background: #ffffff;
+		padding: 54px 16px 90px 16px;
+		min-height: 100vh;
+		height: auto;
+		box-sizing: border-box;
 	}
 `;

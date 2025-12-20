@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ExpenseTable } from '../ExpenseTable/ExpenseTable';
 import { NewExpense } from '../NewExpense/NewExpense';
 import { getTransactions } from '../../api/expensesApi';
 import * as S from './ExpensesLayout.styled';
+import { useMediaQuery } from 'react-responsive';
+import { breakpoints } from '../../breakpoints';
 
 export const ExpensesLayout = () => {
 	const [transactions, setTransactions] = useState([]);
@@ -10,6 +12,7 @@ export const ExpensesLayout = () => {
 	const [editingExpense, setEditingExpense] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
 
 	// Состояния для фильтров
 	const [filters, setFilters] = useState({
@@ -70,39 +73,54 @@ export const ExpensesLayout = () => {
 
 	if (loading) {
 		return (
-			<div>
+			<>
 				<S.PageTitle>Мои расходы</S.PageTitle>
 				<S.LoadingText>Загрузка транзакций...</S.LoadingText>
-			</div>
+			</>
 		);
 	}
 
 	if (error) {
 		return (
-			<div>
+			<>
 				<S.PageTitle>Мои расходы</S.PageTitle>
 				<S.ErrorText>{error}</S.ErrorText>
-			</div>
+			</>
 		);
 	}
 
 	return (
-		<div>
-			<S.PageTitle>Мои расходы</S.PageTitle>
-			<S.MainContent>
-				<ExpenseTable
-					transactions={transactions}
-					onEdit={handleEdit}
-					onTransactionUpdate={handleTransactionUpdate}
-					filters={filters}
-					onFiltersChange={handleFiltersChange}
-				/>
-				<NewExpense
-					isEditing={isEditing}
-					editingExpense={editingExpense}
-					onSave={handleSave}
-				/>
-			</S.MainContent>
-		</div>
+		<>
+			<S.ExpensesWrapper>
+				{isMobile ? '' : <S.PageTitle>Мои расходы</S.PageTitle>}
+
+				{isMobile ? (
+					// Мобильная версия: только таблица
+					<ExpenseTable
+						transactions={transactions}
+						onEdit={handleEdit}
+						onTransactionUpdate={handleTransactionUpdate}
+						filters={filters}
+						onFiltersChange={handleFiltersChange}
+					/>
+				) : (
+					// Десктопная версия: таблица + форма
+					<S.MainContent>
+						<ExpenseTable
+							transactions={transactions}
+							onEdit={handleEdit}
+							onTransactionUpdate={handleTransactionUpdate}
+							filters={filters}
+							onFiltersChange={handleFiltersChange}
+						/>
+						<NewExpense
+							isEditing={isEditing}
+							editingExpense={editingExpense}
+							onSave={handleSave}
+						/>
+					</S.MainContent>
+				)}
+			</S.ExpensesWrapper>
+		</>
 	);
 };

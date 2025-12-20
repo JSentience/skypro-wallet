@@ -21,9 +21,18 @@ const calculateColumnHeight = (amount, maxAmount) => {
 	return Math.max((amount / maxAmount) * 100, 5);
 };
 
-export const Histogram = ({ dateRange, expensesData, loading, error }) => {
-	console.log('📊 Histogram получил данные:', { expensesData, loading, error });
+const isMobile = window.innerWidth <= 549;
 
+const categoryNames = {
+	food: 'Еда',
+	transport: isMobile ? 'Трансп.' : 'Транспорт',
+	housing: 'Жилье',
+	joy: isMobile ? 'Развлеч.' : 'Развлечения',
+	education: isMobile ? 'Образов.' : 'Образование',
+	other: 'Другое',
+};
+
+export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 	if (loading) {
 		return (
 			<S.HistogramBlock>
@@ -51,7 +60,13 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 	if (!dateRange.start || !dateRange.end) {
 		return (
 			<S.HistogramBlock>
-				<S.PlaceholderText>Выберите период в календаре</S.PlaceholderText>
+				<S.PlaceholderText>
+					<p>Выберите период в календаре</p>
+					<p>
+						При выборе одного дня или месяца нажмите на нужный период{' '}
+						<span style={{ color: '#1fa46c', fontWeight: '600' }}>дважды</span>
+					</p>
+				</S.PlaceholderText>
 			</S.HistogramBlock>
 		);
 	}
@@ -108,7 +123,7 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 					<S.ColumnGraphicksFood
 						$height={calculateColumnHeight(expensesData.food, maxAmount)}
 					/>
-					<S.ColumnTitle>Еда</S.ColumnTitle>
+					<S.ColumnTitle>{categoryNames.food}</S.ColumnTitle>
 				</S.ColumnAndExpenses>
 
 				<S.ColumnAndExpenses>
@@ -118,7 +133,7 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 					<S.ColumnGraphicksTransport
 						$height={calculateColumnHeight(expensesData.transport, maxAmount)}
 					/>
-					<S.ColumnTitle>Транспорт</S.ColumnTitle>
+					<S.ColumnTitle>{categoryNames.transport}</S.ColumnTitle>
 				</S.ColumnAndExpenses>
 
 				<S.ColumnAndExpenses>
@@ -128,7 +143,7 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 					<S.ColumnGraphicksHousing
 						$height={calculateColumnHeight(expensesData.housing, maxAmount)}
 					/>
-					<S.ColumnTitle>Жилье</S.ColumnTitle>
+					<S.ColumnTitle>{categoryNames.housing}</S.ColumnTitle>
 				</S.ColumnAndExpenses>
 
 				<S.ColumnAndExpenses>
@@ -138,7 +153,7 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 					<S.ColumnGraphicksEntertainment
 						$height={calculateColumnHeight(expensesData.joy, maxAmount)}
 					/>
-					<S.ColumnTitle>Развлечения</S.ColumnTitle>
+					<S.ColumnTitle>{categoryNames.joy}</S.ColumnTitle>
 				</S.ColumnAndExpenses>
 
 				<S.ColumnAndExpenses>
@@ -148,7 +163,7 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 					<S.ColumnGraphicksEducation
 						$height={calculateColumnHeight(expensesData.education, maxAmount)}
 					/>
-					<S.ColumnTitle>Образование</S.ColumnTitle>
+					<S.ColumnTitle>{categoryNames.education}</S.ColumnTitle>
 				</S.ColumnAndExpenses>
 
 				<S.ColumnAndExpenses>
@@ -158,7 +173,7 @@ export const Histogram = ({ dateRange, expensesData, loading, error }) => {
 					<S.ColumnGraphicksOthers
 						$height={calculateColumnHeight(expensesData.other, maxAmount)}
 					/>
-					<S.ColumnTitle>Другое</S.ColumnTitle>
+					<S.ColumnTitle>{categoryNames.other}</S.ColumnTitle>
 				</S.ColumnAndExpenses>
 			</S.HistogramMainContent>
 		</S.HistogramBlock>
