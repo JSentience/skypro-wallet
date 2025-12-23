@@ -44,6 +44,9 @@ export const Login = () => {
 				response = await register(trimmedName, trimmedLogin, trimmedPassword);
 			}
 			authLogin(response.user);
+			setSuccess(
+				isSignIn ? 'Вход выполнен успешно!' : 'Регистрация выполнена успешно!',
+			);
 			navigate('/');
 		} catch (err) {
 			setError(err.message);

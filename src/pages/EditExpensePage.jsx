@@ -32,6 +32,7 @@ export const EditExpensePage = () => {
 
 	const handleSave = () => {
 		// После сохранения возвращаемся на страницу расходов
+		// Контекст уже обновлен, GET запрос не нужен
 		navigate('/expenses');
 	};
 

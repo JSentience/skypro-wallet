@@ -4,7 +4,8 @@ import { useCallback, useMemo, useState } from 'react';
 import * as S from './ExpenseTable.styled';
 import { FilterCategory } from './FilterCategory';
 import { Filter } from './Filter';
-import { deleteTransaction } from '../../api/expensesApi';
+import { deleteTransaction as deleteTransactionAPI } from '../../api/expensesApi';
+import { useTransactions } from '../../hooks/useTransactions';
 import { useMediaQuery } from 'react-responsive';
 import { breakpoints } from '../../breakpoints';
 import { useNavigate } from 'react-router-dom';
@@ -33,10 +34,10 @@ const REVERSE_CATEGORY_NAMES = {
 export const ExpenseTable = ({
 	transactions,
 	onEdit,
-	onTransactionUpdate,
 	filters,
 	onFiltersChange,
 }) => {
+	const { deleteTransaction } = useTransactions();
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [deletingId, setDeletingId] = useState(null);
@@ -135,11 +136,13 @@ export const ExpenseTable = ({
 	const handleDeleteClick = async (transaction) => {
 		try {
 			setDeletingId(transaction._id);
-			const updatedTransactions = await deleteTransaction(transaction._id);
 
-			if (onTransactionUpdate) {
-				onTransactionUpdate(updatedTransactions);
-			}
+			// Вызываем API для удаления
+			await deleteTransactionAPI(transaction._id);
+
+			// Обновляем контекст локально без GET запроса
+			deleteTransaction(transaction._id);
+
 			// Сбрасываем выбор после удаления
 			setSelectedTransaction(null);
 		} catch (error) {

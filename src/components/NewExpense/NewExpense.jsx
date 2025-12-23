@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import * as S from './NewExpense.styled';
-import { createTransaction, updateTransaction } from '../../api/expensesApi';
+import {
+	createTransaction as createTransactionAPI,
+	updateTransaction as updateTransactionAPI,
+} from '../../api/expensesApi';
+import { useTransactions } from '../../hooks/useTransactions';
 import { breakpoints } from '../../breakpoints';
 
 const CATEGORY_MAPPING = {
@@ -26,6 +30,7 @@ const REVERSE_CATEGORY_MAPPING = {
 export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 	const navigate = useNavigate();
 	const isMobile = useMediaQuery({ maxWidth: breakpoints.mobile });
+	const { addTransaction, updateTransaction } = useTransactions();
 
 	const [formData, setFormData] = useState({
 		description: '',
@@ -314,22 +319,56 @@ export const NewExpense = ({ isEditing, editingExpense, onSave }) => {
 				date: serverDate,
 			};
 
-			let updatedTransactions;
-
 			if (isEditing && editingExpense) {
 				// Редактирование существующей транзакции
-				updatedTransactions = await updateTransaction(
+				const response = await updateTransactionAPI(
 					editingExpense._id,
 					transactionData,
 				);
+
+				// API возвращает объект с массивом transactions, находим обновлённую транзакцию
+				const updatedTransaction = response.transactions?.find(
+					(t) => t._id === editingExpense._id,
+				);
+
+				if (updatedTransaction) {
+					// Обновляем контекст локально без GET запроса
+					updateTransaction(editingExpense._id, updatedTransaction);
+				}
 			} else {
 				// Создание новой транзакции
-				updatedTransactions = await createTransaction(transactionData);
+				const response = await createTransactionAPI(transactionData);
+
+				// API возвращает объект с массивом всех транзакций
+				let newTransaction;
+				if (response.transactions && Array.isArray(response.transactions)) {
+					// Находим новую транзакцию по описанию и сумме, которые мы только что отправили
+					newTransaction = response.transactions.find(
+						(t) =>
+							t.description === transactionData.description &&
+							t.sum === transactionData.sum &&
+							t.category === transactionData.category,
+					);
+
+					// Если не нашли (маловероятно), берём последнюю (самую новую)
+					if (!newTransaction && response.transactions.length > 0) {
+						newTransaction =
+							response.transactions[response.transactions.length - 1];
+					}
+				} else {
+					// Если API вернул просто объект транзакции
+					newTransaction = response;
+				}
+
+				if (newTransaction) {
+					// Добавляем в контекст локально без GET запроса
+					addTransaction(newTransaction);
+				}
 			}
 
-			// Вызываем колбэк с обновленными данными
+			// Вызываем колбэк
 			if (onSave) {
-				onSave(updatedTransactions);
+				onSave();
 			}
 
 			// Сброс формы после успешного сохранения
